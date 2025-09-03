@@ -1,5 +1,5 @@
 {
-    "name": "despia-native-sdk",
+    "name": "despi-native",
     "version": "1.0.0",
     "description": "JavaScript SDK for Despia native integrations with command queuing and variable watching",
     "main": "index.js",
