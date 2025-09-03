@@ -1,24 +1,85 @@
 # Despia SDK
 
-JavaScript SDK for [Despia](https://despia.com) that enables your web app to access native device capabilities through Despia's runtime. This npm package provides command queuing and variable watching capabilities for seamless integration with over 23 native device features.
+JavaScript SDK for [Despia](https://despia.com) - the #1 low-code hybrid framework that ships native apps to app stores in one click. This npm package provides command queuing and variable watching capabilities for seamless integration with Despia's 60fps GPU-accelerated native runtime and **25+ deep native device features** including NFC, Siri, HealthKit, RevenueCat, and offline support.
 
 ## About Despia
 
-Despia is a platform that transforms web applications into fully native mobile apps for iOS and Android. It bridges the gap between web and native functionalities, allowing you to access native device capabilities directly from your web codebase without requiring extensive native development experience. Access features like:
-- App Links & Deep Linking
-- Native Widgets & App Clips
-- In-App Purchases & Subscriptions
-- Push Notifications & Local Notifications
-- Camera Roll & File Downloads
-- Biometric Authentication
-- Background Location
-- And many more native features
+Despia is the #1 low-code hybrid framework that transforms web applications into fully native mobile apps for iOS and Android. Build your web app in any framework you like (React, Vue, Angular, vanilla JS, etc.) - just connect it with the Despia editor and it will import all your configurations. The visual editor lets you build widgets, shortcuts, and configure dynamic targets into your application without needing any native development knowledge.
+
+Ship your app to the App Store and Google Play Store in just one click with automatic CI/CD build processes, automatic updates, and over-the-air updates. Get full source code export with complete Xcode and Android Studio projects in human-readable code - no vendor lock-in, full ownership guaranteed. Built with a fully visual editor, Despia gives you **deep access to native device features** with 60fps GPU-based rendering - all from one codebase.
+
+**Ship a native app in a weekend to the app stores with all native features!**
+
+### Key Features:
+- **Any Framework Support** - Build with React, Vue, Angular, vanilla JS, or any framework
+- **Visual Editor** - Import your web app config and build widgets/shortcuts visually
+- **No Native Knowledge Required** - Configure dynamic targets without native development
+- **Full Source Code Export** - Get complete Xcode and Android Studio projects in human-readable code
+- **No Vendor Lock-in** - Edit the entire codebase after export, full ownership guaranteed
+- **One-Click Deployment** - Ship to App Store & Google Play Store instantly
+- **Automatic CI/CD** - Built-in continuous integration and deployment
+- **Over-the-Air Updates** - Push updates without app store approval
+- **60fps GPU Rendering** - Hardware-accelerated performance
+- **Deep Native Access** - Full access to 25+ native device features (NFC, Siri, HealthKit, RevenueCat, offline support, etc.)
+- **Single Codebase** - One codebase for iOS, Android, and web
+
+### **Deep Native Device Features Include:**
+- **📱 App Links & Deep Linking** - Native app-to-app communication
+- **🎯 Native Widgets & App Clips** - iOS widgets and Android shortcuts
+- **💳 In-App Purchases & Subscriptions** - RevenueCat integration
+- **🔔 Push Notifications & Local Notifications** - Native notification system
+- **📷 Camera Roll & File Downloads** - Direct file system access
+- **🔐 Biometric Authentication** - Touch ID, Face ID, fingerprint
+- **📍 Background Location** - GPS tracking with native permissions
+- **👥 Contact Access** - Read device contacts with permissions
+- **📳 Haptic Feedback** - Light, heavy, success, warning, error vibrations
+- **📊 App Analytics** - Version numbers, bundle IDs, device UUIDs
+- **🖼️ Screenshots** - Native screenshot capture
+- **📱 Status Bar Control** - Color and text styling
+- **🔄 App Reset & Tracking** - User privacy controls
+- **📤 Share Functionality** - Native share sheets
+- **🎨 UI Controls** - Spinners, hide bars, dynamic targets
+- **And 8+ more native features**
 
 ## Installation
 
 ```bash
 npm install despia-native
 ```
+
+## 🚀 **Build in Any Framework → Make it Native**
+
+**Step 1:** Build your web app in any framework you prefer (React, Vue, Angular, vanilla JS, etc.)
+
+**Step 2:** Connect your project to Despia editor:
+   - **Remote URL:** Add your project's remote URL (gets updated over-the-air automatically)
+   - **Upload Project:** Upload your project files directly to the editor
+
+**Step 3:** Use Despia to transform it into a native app with full device access
+
+**Step 4:** This npm package gives you access to all native functionalities and native data
+
+## 📱 **Access 25+ Native Device Features**
+
+With Despia, your web app gets **full native device access** without any native development:
+
+- **🔐 Biometric Check** - Touch ID, Face ID, fingerprint authentication
+- **📍 Location Services** - Background GPS tracking with native permissions  
+- **📷 Camera & Photos** - Direct camera access and photo library
+- **👥 Contacts** - Read device contacts with proper permissions
+- **📳 Haptic Feedback** - 5 types of native vibrations
+- **🔔 Push Notifications** - Native notification system + OneSignal remote push
+- **💳 In-App Purchases** - RevenueCat integration for subscriptions & purchases
+- **🎯 Widgets & Shortcuts** - iOS widgets and Shortcuts
+- **📱 App Store Features** - Version info, bundle IDs, device UUIDs
+- **🎨 Native UI** - Status bar styling, spinners, fullscreen mode
+- **📤 Share & Export** - Native share sheets and file downloads
+- **🔄 Privacy Controls** - App reset and tracking disable
+- **📡 NFC Access** - Near Field Communication for contactless interactions
+- **🎤 Siri Integration** - Voice commands and shortcuts
+- **❤️ HealthKit & Google Fit** - Health data integration
+- **💾 Offline Support** - Offline database and data persistence
+- **And many more native features!**
 
 ## Usage
 
@@ -50,7 +111,7 @@ const contacts = await despia('readcontacts://', ['contacts']);
 
 // Background Location
 despia('backgroundlocationon://');
-// Use native browser geolocation API (not despia wrapper)
+// Use native browser geolocation API (not despia native runtime)
 const watchId = navigator.geolocation.watchPosition(
   (position) => console.log('Location:', position),
   (error) => console.error('Location error:', error)
@@ -138,7 +199,7 @@ Background location tracking requires a two-step process:
 // Step 1: Enable native background location tracking via Despia
 despia('backgroundlocationon://');
 
-// Step 2: Use native browser geolocation API for actual tracking (not despia wrapper)
+// Step 2: Use native browser geolocation API for actual tracking (not despia native runtime)
 const watchId = navigator.geolocation.watchPosition(
   (position) => {
     console.log('Location update:', {
@@ -417,7 +478,7 @@ const deviceInfo: any = despia.deviceInfo;
 
 ## Integration with Despia
 
-Despia operates through a streamlined protocol handler system, allowing you to invoke native features using the global `window.despia` object. This npm package is the JavaScript SDK that makes your web app communicate with Despia's native runtime. The SDK provides:
+Despia operates through a streamlined protocol handler system, allowing you to invoke native features using the global `window.despia` object. This npm package is the JavaScript SDK that makes your web app communicate with Despia's native runtime. The SDK provides:es and sdks 
 
 - **Command Queuing** - Sequential execution of Despia commands via `window.despia` setter
 - **Variable Watching** - Async monitoring of response variables
