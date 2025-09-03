@@ -1,85 +1,49 @@
-# Despia SDK
-
-JavaScript SDK for [Despia](https://despia.com) - the #1 low-code hybrid framework that ships native apps to app stores in one click. This npm package provides command queuing and variable watching capabilities for seamless integration with Despia's 60fps GPU-accelerated native runtime and **25+ deep native device features** including NFC, Siri, HealthKit, RevenueCat, and offline support.
+JavaScript SDK for [Despia](https://despia.com) - Transform your web app into a native iOS & Android app without writing Swift or Kotlin. This npm package provides command queuing and variable watching for seamless integration with Despia's GPU-accelerated native runtime, enabling access to 25+ device APIs through simple JavaScript calls.
 
 ## About Despia
 
-Despia is the #1 low-code hybrid framework that transforms web applications into fully native mobile apps for iOS and Android. Build your web app in any framework you like (React, Vue, Angular, vanilla JS, etc.) - just connect it with the Despia editor and it will import all your configurations. The visual editor lets you build widgets, shortcuts, and configure dynamic targets into your application without needing any native development knowledge.
+Despia bridges the gap between web and native mobile development. Build your app using the web technologies you already know, then deploy it as a truly native application to the App Store and Google Play - complete with hardware acceleration, offline support, and deep OS integration.
 
-Ship your app to the App Store and Google Play Store in just one click with automatic CI/CD build processes, automatic updates, and over-the-air updates. Get full source code export with complete Xcode and Android Studio projects in human-readable code - no vendor lock-in, full ownership guaranteed. Built with a fully visual editor, Despia gives you **deep access to native device features** with 60fps GPU-based rendering - all from one codebase.
+Our visual editor allows you to configure native widgets, shortcuts, and dynamic app behaviors without touching Xcode or Android Studio. Ship to both app stores with one-click deployment, automatic CI/CD pipelines, and over-the-air updates. Export clean, human-readable Swift and Kotlin source code anytime - you own everything, no vendor lock-in.
 
-**Ship a native app in a weekend to the app stores with all native features!**
+**Go from web app to app store in a weekend - with full native capabilities.**
 
 ### Key Features:
-- **Any Framework Support** - Build with React, Vue, Angular, vanilla JS, or any framework
-- **Visual Editor** - Import your web app config and build widgets/shortcuts visually
-- **No Native Knowledge Required** - Configure dynamic targets without native development
-- **Full Source Code Export** - Get complete Xcode and Android Studio projects in human-readable code
-- **No Vendor Lock-in** - Edit the entire codebase after export, full ownership guaranteed
-- **One-Click Deployment** - Ship to App Store & Google Play Store instantly
-- **Automatic CI/CD** - Built-in continuous integration and deployment
-- **Over-the-Air Updates** - Push updates without app store approval
-- **60fps GPU Rendering** - Hardware-accelerated performance
-- **Deep Native Access** - Full access to 25+ native device features (NFC, Siri, HealthKit, RevenueCat, offline support, etc.)
-- **Single Codebase** - One codebase for iOS, Android, and web
+- **Universal Framework Support** - Works with React, Vue, Angular, Svelte, vanilla JS, or any web framework
+- **Visual Configuration** - Set up native features through an intuitive interface
+- **Zero Native Coding** - Access device APIs without writing Swift or Kotlin
+- **Source Code Export** - Get complete Xcode and Android Studio projects you can modify
+- **True Ownership** - Full access to generated code, no restrictions
+- **One-Click Publishing** - Direct deployment to App Store & Google Play
+- **Automated Pipeline** - Built-in CI/CD with code signing and provisioning
+- **OTA Updates** - Push updates instantly without app store review
+- **Performance** - 60fps GPU-accelerated rendering
+- **Device API Access** - NFC, HealthKit, Siri, RevenueCat, and 20+ more
+- **Single Codebase** - Maintain one project for iOS, Android, and web
 
-### **Deep Native Device Features Include:**
-- **📱 App Links & Deep Linking** - Native app-to-app communication
-- **🎯 Native Widgets & App Clips** - iOS widgets and Android shortcuts
-- **💳 In-App Purchases & Subscriptions** - RevenueCat integration
-- **🔔 Push Notifications & Local Notifications** - Native notification system
-- **📷 Camera Roll & File Downloads** - Direct file system access
-- **🔐 Biometric Authentication** - Touch ID, Face ID, fingerprint
-- **📍 Background Location** - GPS tracking with native permissions
-- **👥 Contact Access** - Read device contacts with permissions
-- **📳 Haptic Feedback** - Light, heavy, success, warning, error vibrations
-- **📊 App Analytics** - Version numbers, bundle IDs, device UUIDs
-- **🖼️ Screenshots** - Native screenshot capture
-- **📱 Status Bar Control** - Color and text styling
-- **🔄 App Reset & Tracking** - User privacy controls
-- **📤 Share Functionality** - Native share sheets
-- **🎨 UI Controls** - Spinners, hide bars, dynamic targets
-- **And 8+ more native features**
+### Native Device Features:
+- **App Links & Deep Linking** - Universal links and app-to-app communication
+- **Widgets & App Clips** - Home screen widgets and instant app experiences  
+- **In-App Purchases** - RevenueCat integration for subscriptions and payments
+- **Push Notifications** - Local and remote notifications with rich media
+- **Camera & Media** - Camera access, photo library, and file management
+- **Biometric Authentication** - Face ID, Touch ID, and fingerprint
+- **Location Services** - Foreground and background GPS tracking
+- **Contacts** - Address book access with proper permissions
+- **Haptic Feedback** - Tactile responses for user interactions
+- **App Analytics** - Version tracking, bundle IDs, device identifiers
+- **Screenshots** - Programmatic screen capture
+- **Status Bar** - Dynamic styling and visibility control
+- **Privacy Controls** - IDFA tracking and permission management
+- **Share Sheets** - Native sharing UI
+- **UI Controls** - Loading indicators, navigation bars, dynamic layouts
+- **Plus 8+ additional native capabilities**
 
 ## Installation
 
 ```bash
 npm install despia-native
 ```
-
-## 🚀 **Build in Any Framework → Make it Native**
-
-**Step 1:** Build your web app in any framework you prefer (React, Vue, Angular, vanilla JS, etc.)
-
-**Step 2:** Connect your project to Despia editor:
-   - **Remote URL:** Add your project's remote URL (gets updated over-the-air automatically)
-   - **Upload Project:** Upload your project files directly to the editor
-
-**Step 3:** Use Despia to transform it into a native app with full device access
-
-**Step 4:** This npm package gives you access to all native functionalities and native data
-
-## 📱 **Access 25+ Native Device Features**
-
-With Despia, your web app gets **full native device access** without any native development:
-
-- **🔐 Biometric Check** - Touch ID, Face ID, fingerprint authentication
-- **📍 Location Services** - Background GPS tracking with native permissions  
-- **📷 Camera & Photos** - Direct camera access and photo library
-- **👥 Contacts** - Read device contacts with proper permissions
-- **📳 Haptic Feedback** - 5 types of native vibrations
-- **🔔 Push Notifications** - Native notification system + OneSignal remote push
-- **💳 In-App Purchases** - RevenueCat integration for subscriptions & purchases
-- **🎯 Widgets & Shortcuts** - iOS widgets and Shortcuts
-- **📱 App Store Features** - Version info, bundle IDs, device UUIDs
-- **🎨 Native UI** - Status bar styling, spinners, fullscreen mode
-- **📤 Share & Export** - Native share sheets and file downloads
-- **🔄 Privacy Controls** - App reset and tracking disable
-- **📡 NFC Access** - Near Field Communication for contactless interactions
-- **🎤 Siri Integration** - Voice commands and shortcuts
-- **❤️ HealthKit & Google Fit** - Health data integration
-- **💾 Offline Support** - Offline database and data persistence
-- **And many more native features!**
 
 ## Usage
 
