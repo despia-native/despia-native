@@ -1,0 +1,17 @@
+{
+    "name": "despia-native-sdk",
+    "version": "1.0.0",
+    "description": "JavaScript SDK for Despia native integrations with command queuing and variable watching",
+    "main": "index.js",
+    "module": "index.js",
+    "types": "index.d.ts",
+    "keywords": ["despia", "sdk", "mobile", "native", "bridge", "applinks", "biometric", "purchase", "push", "camera", "location", "download", "haptic", "widget", "revenuecat", "contacts"],
+    "author": "Despia Native <developers@despia.com>",
+    "license": "MIT",
+
+    "scripts": {
+        "test": "echo \"No tests specified\"",
+        "prepublishOnly": "npm test"
+    },
+    "files": ["index.js", "index.d.ts", "README.md"]
+   }
