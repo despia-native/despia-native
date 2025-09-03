@@ -1,10 +1,10 @@
 # Despia SDK
 
-JavaScript SDK for [Despia](https://docs.despia.com) native integrations with command queuing and variable watching capabilities.
+JavaScript SDK for [Despia](https://despia.com) that enables your web app to access native device capabilities through Despia's runtime. This npm package provides command queuing and variable watching capabilities for seamless integration with over 23 native device features.
 
 ## About Despia
 
-Despia provides native device capabilities to web applications through a simple protocol system. Access features like:
+Despia is a platform that transforms web applications into fully native mobile apps for iOS and Android. It bridges the gap between web and native functionalities, allowing you to access native device capabilities directly from your web codebase without requiring extensive native development experience. Access features like:
 - App Links & Deep Linking
 - Native Widgets & App Clips
 - In-App Purchases & Subscriptions
@@ -417,16 +417,17 @@ const deviceInfo: any = despia.deviceInfo;
 
 ## Integration with Despia
 
-This SDK is designed to work with [Despia's native integration system](https://docs.despia.com/docs/native-integrations/getting-started). The SDK provides:
+Despia operates through a streamlined protocol handler system, allowing you to invoke native features using the global `window.despia` object. This npm package is the JavaScript SDK that makes your web app communicate with Despia's native runtime. The SDK provides:
 
 - **Command Queuing** - Sequential execution of Despia commands via `window.despia` setter
 - **Variable Watching** - Async monitoring of response variables
-- **iOS Web View Compatible** - Works with Despia's iOS web view wrapper
+- **Hybrid Framework Compatible** - Works with Despia's hybrid app framework
 - **Direct Access** - Proxy-based access to window variables
 
 ### How It Works
 
-The SDK uses the setter pattern to execute commands:
+Despia's protocol handler system eliminates the need for complex libraries or dependencies, making it compatible across various frameworks and platforms. The SDK uses the setter pattern to execute commands:
+
 ```javascript
 // When you call:
 despia('lighthaptic://');
@@ -435,7 +436,7 @@ despia('lighthaptic://');
 window.despia = 'lighthaptic://';
 ```
 
-This triggers the iOS web view wrapper's setter function to handle the native command.
+This streamlined approach triggers Despia's native runtime to handle the native command, providing seamless access to device capabilities directly from your web codebase.
 
 ## License
 
