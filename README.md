@@ -17,7 +17,7 @@ Despia provides native device capabilities to web applications through a simple 
 ## Installation
 
 ```bash
-npm install despia
+npm install despia-native
 ```
 
 ## Usage
@@ -25,7 +25,7 @@ npm install despia
 ### Basic Despia Command Execution
 
 ```javascript
-import despia from 'despia';
+import despia from 'despia-native';
 
 // Execute a Despia protocol command (no response needed)
 despia('lighthaptic://');
@@ -403,7 +403,7 @@ Your app can access these native features:
 Full TypeScript definitions are included:
 
 ```typescript
-import despia from 'despia';
+import despia from 'despia-native';
 
 // Type-safe usage with Despia commands
 const result: { versionNumber: string; bundleNumber: string } = await despia(

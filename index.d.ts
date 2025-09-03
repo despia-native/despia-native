@@ -103,7 +103,7 @@ interface DespiaFunction {
  * 
  * @example
  * ```typescript
- * import despia from 'despia';
+ * import despia from 'despia-native';
  * 
  * // Execute Despia protocol commands
  * await despia('applinks://open?url=https://maps.apple.com');
