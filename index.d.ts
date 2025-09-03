@@ -4,7 +4,6 @@
  * Despia protocol command types
  */
 type DespiaCommand = 
-  | `applinks://${string}`
   | `widget://${string}`
   | `revenuecat://${string}`
   | `requestcontactpermission://`
@@ -70,16 +69,15 @@ interface DespiaFunction {
    * Execute a Despia protocol command and watch for specific response variables
    * @param command - The Despia protocol command
    * @param watch - Array of variable names to watch for in the response
-   * @param timeout - Timeout in milliseconds (default: 10000)
-   * @returns Promise that resolves with the watched variables or times out
+   * @returns Promise that resolves with the watched variables
    * 
    * @example
    * ```typescript
-   * const result = await despia('biometric://authenticate', ['authResult', 'userID']);
-   * const purchase = await despia('purchase://product?sku=premium', ['purchaseResult', 'transactionID']);
+   * const result = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
+   * const purchase = await despia('revenuecat://purchase?external_id=user_777&product=monthly_premium', ['purchaseResult', 'transactionID']);
    * ```
    */
-  <T = Record<string, any>>(command: DespiaCommand, watch: string[], timeout?: number): Promise<T>;
+  <T = Record<string, any>>(command: DespiaCommand, watch: string[]): Promise<T>;
   
   /**
    * Access any window variable directly (useful for Despia response data)

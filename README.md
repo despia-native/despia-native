@@ -27,11 +27,11 @@ npm install despia
 ```javascript
 import despia from 'despia';
 
-// Execute a Despia protocol command (no response)
-await despia('lighthaptic://');
+// Execute a Despia protocol command (no response needed)
+despia('lighthaptic://');
 
-// Execute command and watch for response variables
-const result = await despia('getappversion://', ['versionNumber', 'bundleNumber'], 5000);
+// Execute command and watch for response variables (await needed)
+const result = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
 console.log(result); // { versionNumber: '1.0.0', bundleNumber: '123' }
 ```
 
@@ -39,74 +39,74 @@ console.log(result); // { versionNumber: '1.0.0', bundleNumber: '123' }
 
 ```javascript
 // Native Widgets
-await despia('widget://${svg}?refresh=${refresh_time}');
+despia('widget://${svg}?refresh=${refresh_time}');
 
 // RevenueCat In-App Purchases
-await despia('revenuecat://purchase?external_id=user_777&product=monthly_premium');
+despia('revenuecat://purchase?external_id=user_777&product=monthly_premium');
 
 // Contact Permissions
-await despia('requestcontactpermission://');
+despia('requestcontactpermission://');
 const contacts = await despia('readcontacts://', ['contacts']);
 
 // Background Location
-await despia('backgroundlocationon://');
+despia('backgroundlocationon://');
 // Use native browser geolocation API (not despia wrapper)
 const watchId = navigator.geolocation.watchPosition(
   (position) => console.log('Location:', position),
   (error) => console.error('Location error:', error)
 );
 // To stop
-await despia('backgroundlocationoff://');
+despia('backgroundlocationoff://');
 navigator.geolocation.clearWatch(watchId);
 
 // Push Notifications
-await despia('registerpush://');
-await despia('sendlocalpushmsg://push.send?s=60&msg=Hello&!#New Message&!#https://myapp.com');
+despia('registerpush://');
+despia('sendlocalpushmsg://push.send?s=60&msg=Hello&!#New Message&!#https://myapp.com');
 const oneSignalData = await despia('getonesignalplayerid://', ['onesignalplayerid']);
 
 // Haptic Feedback
-await despia('lighthaptic://');
-await despia('heavyhaptic://');
-await despia('successhaptic://');
-await despia('warninghaptic://');
-await despia('errorhaptic://');
+despia('lighthaptic://');
+despia('heavyhaptic://');
+despia('successhaptic://');
+despia('warninghaptic://');
+despia('errorhaptic://');
 
 // App Information
 const appInfo = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
 const deviceInfo = await despia('get-uuid://', ['uuid']);
 
 // Screenshots and Scanning
-await despia('takescreenshot://');
-await despia('scanningmode://auto');
-await despia('scanningmode://on');
-await despia('scanningmode://off');
+despia('takescreenshot://');
+despia('scanningmode://auto');
+despia('scanningmode://on');
+despia('scanningmode://off');
 
 // Store and Location
 const storeData = await despia('getstorelocation://', ['storeLocation']);
 
 // Image and File Operations
-await despia('savethisimage://?url=${image_url}');
-await despia('file://${file_url}');
+despia('savethisimage://?url=${image_url}');
+despia('file://${file_url}');
 
 // App Control
-await despia('reset://');
+despia('reset://');
 const trackingData = await despia('user-disable-tracking://', ['trackingDisabled']);
 
 // UI Controls
-await despia('spinneron://');
-await despia('spinneroff://');
-await despia('hidebars://on');
-await despia('hidebars://off');
+despia('spinneron://');
+despia('spinneroff://');
+despia('hidebars://on');
+despia('hidebars://off');
 
 // Sharing
-await despia('shareapp://message?=${message}&url=${url}');
+despia('shareapp://message?=${message}&url=${url}');
 
 // Status Bar Styling
-await despia('statusbarcolor://{255, 255, 255}');
-await despia('statusbartextcolor://{black}');
+despia('statusbarcolor://{255, 255, 255}');
+despia('statusbartextcolor://{black}');
 
 // Biometric Authentication
-await despia('bioauth://');
+despia('bioauth://');
 ```
 
 ### Direct Window Variable Access
@@ -121,13 +121,13 @@ const appVersion = despia.appVersion;
 ### Advanced Usage with Variable Watching
 
 ```javascript
-// Watch multiple response variables with custom timeout
-const appData = await despia('getappversion://', ['versionNumber', 'bundleNumber'], 15000);
+// Watch multiple response variables
+const appData = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
 
 // Chain multiple Despia commands
-await despia('lighthaptic://');
-await despia('getappversion://', ['versionNumber', 'bundleNumber']);
-await despia('successhaptic://');
+despia('lighthaptic://');
+const appData2 = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
+despia('successhaptic://');
 ```
 
 ### Background Location Workflow
@@ -136,7 +136,7 @@ Background location tracking requires a two-step process:
 
 ```javascript
 // Step 1: Enable native background location tracking via Despia
-await despia('backgroundlocationon://');
+despia('backgroundlocationon://');
 
 // Step 2: Use native browser geolocation API for actual tracking (not despia wrapper)
 const watchId = navigator.geolocation.watchPosition(
@@ -160,7 +160,7 @@ const watchId = navigator.geolocation.watchPosition(
 
 // To stop tracking:
 // Step 1: Disable native background tracking via Despia
-await despia('backgroundlocationoff://');
+despia('backgroundlocationoff://');
 // Step 2: Clear browser geolocation watch (native API)
 navigator.geolocation.clearWatch(watchId);
 ```
@@ -169,7 +169,7 @@ navigator.geolocation.clearWatch(watchId);
 
 ```javascript
 // Step 1: Request contact permission
-await despia('requestcontactpermission://');
+despia('requestcontactpermission://');
 
 // Step 2: Read contacts after permission granted
 const contactData = await despia('readcontacts://', ['contacts']);
@@ -182,13 +182,13 @@ All haptic feedback commands have no response - they provide immediate tactile f
 
 ```javascript
 // Basic haptic feedback
-await despia('lighthaptic://');    // Light haptic feedback - subtle vibration
-await despia('heavyhaptic://');    // Heavy haptic feedback - strong vibration
+despia('lighthaptic://');    // Light haptic feedback - subtle vibration
+despia('heavyhaptic://');    // Heavy haptic feedback - strong vibration
 
 // Contextual haptic feedback
-await despia('successhaptic://');  // Success haptic feedback - positive confirmation
-await despia('warninghaptic://');  // Warning haptic feedback - attention alert
-await despia('errorhaptic://');    // Error haptic feedback - negative feedback
+despia('successhaptic://');  // Success haptic feedback - positive confirmation
+despia('warninghaptic://');  // Warning haptic feedback - attention alert
+despia('errorhaptic://');    // Error haptic feedback - negative feedback
 
 // Use cases:
 // - Button press feedback (light/heavy)
@@ -248,7 +248,7 @@ window.bioauthUnavailable = function() {
 }
 
 // Step 3: Trigger biometric authentication
-await despia('bioauth://');
+despia('bioauth://');
 ```
 
 ### App Information & Device Data
@@ -329,8 +329,6 @@ Access native safe area insets via CSS custom properties:
 .my-element {
   padding-top: var(--safe-area-top);
   padding-bottom: var(--safe-area-bottom);
-  padding-left: var(--safe-area-left);
-  padding-right: var(--safe-area-right);
 }
 
 /* Full height with safe area consideration */
@@ -339,19 +337,22 @@ Access native safe area insets via CSS custom properties:
 }
 ```
 
+**Note:** Despia only supports top and bottom safe area insets. Left and right safe area variables are not available.
+
 These CSS variables are automatically provided by the Despia native runtime and represent the device's safe area insets (notches, home indicators, etc.).
 
 
 
 ## API Reference
 
-### `despia(command, watch?, timeout?)`
+### `despia(command, watch?)`
 
-- **command** (string): The Despia protocol command (e.g., `'applinks://open?url=...'`)
+- **command** (string): The Despia protocol command (e.g., `'lighthaptic://'`)
 - **watch** (string[], optional): Array of variable names to watch for in the response
-- **timeout** (number, optional): Timeout in milliseconds (default: 10000)
 
-Returns a Promise that resolves when all watched variables are available or timeout is reached.
+Returns a Promise that resolves when all watched variables are available:
+- **Single variable**: 5-second timeout with simple observation
+- **Multiple variables**: Uses VariableTracker with 5-minute auto-cleanup
 
 ### Direct Property Access
 
