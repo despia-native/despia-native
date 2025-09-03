@@ -19,11 +19,14 @@
       if (processing || commandQueue.length === 0) return;
       
       processing = true;
-      const { command, native } = commandQueue.shift();
+      const { command } = commandQueue.shift();
       
       try {
-        native({ command });
-      } catch (e) {}
+        // Use the setter pattern: window.despia = command
+        window.despia = command;
+      } catch (e) {
+        console.error('Despia command failed:', e);
+      }
       
       setTimeout(() => {
         processing = false;
@@ -33,12 +36,8 @@
   
     // Add command to queue
     function queueCommand(command) {
-      const native = typeof window !== 'undefined' 
-        ? window.despia 
-        : (typeof global !== 'undefined' ? global.despia : null);
-      
-      if (native) {
-        commandQueue.push({ command, native });
+      if (typeof window !== 'undefined') {
+        commandQueue.push({ command });
         processQueue();
       }
     }

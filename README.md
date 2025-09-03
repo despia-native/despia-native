@@ -419,10 +419,23 @@ const deviceInfo: any = despia.deviceInfo;
 
 This SDK is designed to work with [Despia's native integration system](https://docs.despia.com/docs/native-integrations/getting-started). The SDK provides:
 
-- **Command Queuing** - Sequential execution of Despia commands
+- **Command Queuing** - Sequential execution of Despia commands via `window.despia` setter
 - **Variable Watching** - Async monitoring of response variables
-- **Timeout Handling** - Configurable timeouts for long-running operations
+- **iOS Web View Compatible** - Works with Despia's iOS web view wrapper
 - **Direct Access** - Proxy-based access to window variables
+
+### How It Works
+
+The SDK uses the setter pattern to execute commands:
+```javascript
+// When you call:
+despia('lighthaptic://');
+
+// It internally executes:
+window.despia = 'lighthaptic://';
+```
+
+This triggers the iOS web view wrapper's setter function to handle the native command.
 
 ## License
 
