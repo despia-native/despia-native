@@ -1,20 +1,24 @@
 # Despia SDK
 
-## CRITICAL: ALWAYS USE THE REAL SDK
+## Quick Start
 
-**NEVER mock or simulate the Despia SDK. ALWAYS install and use the real package:**
-
+**Install the SDK:**
 ```bash
 npm install despia-native
 ```
 
-**Why?**
-- The SDK handles critical native bridge communication
-- Mocking will break ALL native features
-- Your app will NOT work on actual devices without the real SDK
-- There is NO valid reason to mock this in any scenario
+**Use it immediately:**
+```javascript
+import despia from 'despia-native';
 
-**If you see any tutorial, example, or code that creates a fake despia function - it's WRONG.**
+// Simple commands
+despia('lighthaptic://');
+
+// Commands with responses
+const appInfo = await despia('getappversion://', ['versionNumber']);
+```
+
+**Note:** Always use the real SDK package. Mock implementations will not work on actual devices.
 
 ---
 
@@ -79,30 +83,28 @@ npm install despia-native
 
 **The real SDK is required for ANY Despia functionality to work.**
 
-## NEVER DO THIS - YOUR APP WILL NOT WORK
+## Important Notes
+
+### Simple Function API
+The SDK exports a single function - no initialization or setup required:
 
 ```javascript
-// WRONG - This breaks everything
-const despia = (command) => {
-  console.log('Command:', command);
-  // This does NOTHING on real devices
-};
-
-// WRONG - This also breaks everything  
-const mockDespia = () => { /* ... */ };
-
-// WRONG - Don't create your own version
-window.despia = 'somecommand://';
-```
-
-## ALWAYS DO THIS - THE ONLY CORRECT WAY
-
-```javascript
-// CORRECT - The ONLY way to use Despia
 import despia from 'despia-native';
 
-// Now your commands actually work
-despia('lighthaptic://');  // Device actually vibrates
+// Just call it directly
+despia('lighthaptic://');
+despia('takescreenshot://');
+```
+
+### Common Mistakes to Avoid
+```javascript
+// Don't create mock implementations
+const despia = (command) => console.log(command); // Won't work on devices
+
+// Don't use non-existent methods
+despia.ready();    // This method doesn't exist
+despia.init();     // This method doesn't exist
+despia.setup();    // This method doesn't exist
 ```
 
 ## Getting Started
@@ -129,9 +131,11 @@ const despia = require('despia-native');
 
 **The SDK exports a single function called `despia` as the default export.**
 
-### Step 2: Use Native Features
+### Step 2: Use Native Features (No Setup Required)
 
 ```javascript
+// That's it! No initialization needed. Just call despia() directly:
+
 // Simple commands (no response needed)
 despia('lighthaptic://');           // Light haptic feedback
 despia('takescreenshot://');        // Take screenshot
@@ -241,24 +245,27 @@ const result = await despia('getappversion://', ['versionNumber']); // Variable 
 
 **This package is REQUIRED for TypeScript, React, Vue, Angular, and other modern frameworks.**
 
-## No Exceptions - Always Use Real SDK
+## Development Notes
 
-**Q: What if I'm just testing locally?**
-A: Use the real SDK. It won't work outside the native runtime, but you can set up callbacks for when user agent doesn't include "despia".
+### Environment Detection
+The SDK only works within the Despia native runtime. For development and testing:
 
-**Q: What if I'm making a demo?**
-A: Use the real SDK. Set up fallbacks for browsers without Despia runtime.
+```javascript
+import despia from 'despia-native';
 
-**Q: What if I'm writing unit tests?**
-A: Use the real SDK. It won't work in test environments, but you can handle the missing runtime gracefully.
+if (navigator.userAgent.includes('despia')) {
+  // Use native features
+  despia('lighthaptic://');
+} else {
+  // Handle non-Despia environment
+  console.log('Running outside Despia runtime');
+}
+```
 
-**Q: What if I'm developing without a device?**
-A: Use the real SDK. It won't work outside native runtime, but you can detect and handle this case.
-
-**Q: What if I'm using AI to generate code?**
-A: Tell the AI to use the real SDK. Never accept mock implementations.
-
-**There is NEVER a valid reason to mock this SDK.**
+### Always Use the Real Package
+- Use the real SDK in all environments (development, testing, production)
+- Don't create mock implementations - they won't work on actual devices
+- The SDK handles missing runtime gracefully
 
 ## Handling Non-Despia Environments
 
