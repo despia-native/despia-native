@@ -1,3 +1,5 @@
+# Despia SDK
+
 JavaScript SDK for [Despia](https://despia.com) - Transform your web app into a native iOS & Android app without writing Swift or Kotlin. This npm package provides command queuing and variable watching for seamless integration with Despia's GPU-accelerated native runtime, enabling access to 25+ device APIs through simple JavaScript calls.
 
 ## About Despia
@@ -442,7 +444,7 @@ const deviceInfo: any = despia.deviceInfo;
 
 ## Integration with Despia
 
-Despia operates through a streamlined protocol handler system, allowing you to invoke native features using the global `window.despia` object. This npm package is the JavaScript SDK that makes your web app communicate with Despia's native runtime. The SDK provides:es and sdks 
+Despia operates through a streamlined protocol handler system, allowing you to invoke native features using the global `window.despia` object. This npm package is the JavaScript SDK that makes your web app communicate with Despia's native runtime. The SDK provides:
 
 - **Command Queuing** - Sequential execution of Despia commands via `window.despia` setter
 - **Variable Watching** - Async monitoring of response variables
