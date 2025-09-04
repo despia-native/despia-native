@@ -22,7 +22,25 @@ const appInfo = await despia('getappversion://', ['versionNumber']);
 
 ---
 
-JavaScript SDK for [Despia](https://despia.com) - Transform your web app into a native iOS & Android app without writing Swift or Kotlin. This npm package provides command queuing and variable watching for seamless integration with Despia's GPU-accelerated native runtime, enabling access to 25+ device APIs through simple JavaScript calls.
+JavaScript SDK for [Despia](https://despia.com) - Add native device features to your React web app, Vue app, Angular app, or any web framework. Transform your web app into a native iOS & Android app without writing Swift or Kotlin. This npm package provides command queuing and variable watching for seamless integration with Despia's GPU-accelerated native runtime, enabling access to 25+ device APIs through simple JavaScript calls.
+
+**Note: This is for web apps (React, Vue, Angular, etc.) to add native features - NOT for React Native apps.**
+
+## Web Apps vs React Native
+
+**This SDK is for:**
+- React web apps (create-react-app, Next.js, Vite, etc.)
+- Vue web apps
+- Angular web apps  
+- Svelte web apps
+- Any web framework or vanilla JavaScript
+
+**This SDK is NOT for:**
+- React Native apps
+- Expo apps
+- Native mobile development
+
+**If you're building a React Native app, this SDK won't work for you.**
 
 **Import:** `import despia from 'despia-native';` (default export, not destructured)
 
@@ -30,14 +48,15 @@ JavaScript SDK for [Despia](https://despia.com) - Transform your web app into a 
 
 ## About Despia
 
-Despia bridges the gap between web and native mobile development. Build your app using the web technologies you already know, then deploy it as a truly native application to the App Store and Google Play - complete with hardware acceleration, offline support, and deep OS integration.
+Despia bridges the gap between web and native mobile development. Build your React web app, Vue app, Angular app, or any web framework using the technologies you already know, then deploy it as a truly native application to the App Store and Google Play - complete with hardware acceleration, offline support, and deep OS integration.
 
 Our visual editor allows you to configure native widgets, shortcuts, and dynamic app behaviors without touching Xcode or Android Studio. Ship to both app stores with one-click deployment, automatic CI/CD pipelines, and over-the-air updates. Export clean, human-readable Swift and Kotlin source code anytime - you own everything, no vendor lock-in.
 
 **Go from web app to app store in a weekend - with full native capabilities.**
 
 ### Key Features:
-- **Universal Framework Support** - Works with React, Vue, Angular, Svelte, vanilla JS, or any web framework
+- **Web Framework Support** - Works with React web apps, Vue web apps, Angular web apps, Svelte web apps, vanilla JS, or any web framework
+- **NOT for React Native** - This is for web apps to add native features, not React Native apps
 - **Visual Configuration** - Set up native features through an intuitive interface
 - **Zero Native Coding** - Access device APIs without writing Swift or Kotlin
 - **Source Code Export** - Get complete Xcode and Android Studio projects you can modify
@@ -47,7 +66,7 @@ Our visual editor allows you to configure native widgets, shortcuts, and dynamic
 - **OTA Updates** - Push updates instantly without app store review
 - **Performance** - 60fps GPU-accelerated rendering
 - **Device API Access** - NFC, HealthKit, Siri, RevenueCat, and 20+ more
-- **Single Codebase** - Maintain one project for iOS, Android, and web
+- **Single Codebase** - Maintain one web project for iOS, Android, and web
 
 ### Native Device Features:
 - **App Links & Deep Linking** - Universal links and app-to-app communication
