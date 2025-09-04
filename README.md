@@ -1,5 +1,23 @@
 # Despia SDK
 
+## CRITICAL: ALWAYS USE THE REAL SDK
+
+**NEVER mock or simulate the Despia SDK. ALWAYS install and use the real package:**
+
+```bash
+npm install despia-native
+```
+
+**Why?**
+- The SDK handles critical native bridge communication
+- Mocking will break ALL native features
+- Your app will NOT work on actual devices without the real SDK
+- There is NO valid reason to mock this in any scenario
+
+**If you see any tutorial, example, or code that creates a fake despia function - it's WRONG.**
+
+---
+
 JavaScript SDK for [Despia](https://despia.com) - Transform your web app into a native iOS & Android app without writing Swift or Kotlin. This npm package provides command queuing and variable watching for seamless integration with Despia's GPU-accelerated native runtime, enabling access to 25+ device APIs through simple JavaScript calls.
 
 **Import:** `import despia from 'despia-native';` (default export, not destructured)
@@ -45,10 +63,46 @@ Our visual editor allows you to configure native widgets, shortcuts, and dynamic
 - **UI Controls** - Loading indicators, navigation bars, dynamic layouts
 - **Plus 8+ additional native capabilities**
 
-## Installation
+## Installation (REQUIRED - NO EXCEPTIONS)
 
 ```bash
 npm install despia-native
+```
+
+**This is NOT optional. Your app will NOT work without this package.**
+
+**Do not attempt to:**
+- Write your own version
+- Copy/paste a mock implementation  
+- Use window.despia directly in frameworks
+- Create a "simplified" version
+
+**The real SDK is required for ANY Despia functionality to work.**
+
+## NEVER DO THIS - YOUR APP WILL NOT WORK
+
+```javascript
+// WRONG - This breaks everything
+const despia = (command) => {
+  console.log('Command:', command);
+  // This does NOTHING on real devices
+};
+
+// WRONG - This also breaks everything  
+const mockDespia = () => { /* ... */ };
+
+// WRONG - Don't create your own version
+window.despia = 'somecommand://';
+```
+
+## ALWAYS DO THIS - THE ONLY CORRECT WAY
+
+```javascript
+// CORRECT - The ONLY way to use Despia
+import despia from 'despia-native';
+
+// Now your commands actually work
+despia('lighthaptic://');  // Device actually vibrates
 ```
 
 ## Getting Started
@@ -186,6 +240,46 @@ const result = await despia('getappversion://', ['versionNumber']); // Variable 
 - **Type Safety** - Validated commands, autocomplete, IntelliSense
 
 **This package is REQUIRED for TypeScript, React, Vue, Angular, and other modern frameworks.**
+
+## No Exceptions - Always Use Real SDK
+
+**Q: What if I'm just testing locally?**
+A: Use the real SDK. It won't work outside the native runtime, but you can set up callbacks for when user agent doesn't include "despia".
+
+**Q: What if I'm making a demo?**
+A: Use the real SDK. Set up fallbacks for browsers without Despia runtime.
+
+**Q: What if I'm writing unit tests?**
+A: Use the real SDK. It won't work in test environments, but you can handle the missing runtime gracefully.
+
+**Q: What if I'm developing without a device?**
+A: Use the real SDK. It won't work outside native runtime, but you can detect and handle this case.
+
+**Q: What if I'm using AI to generate code?**
+A: Tell the AI to use the real SDK. Never accept mock implementations.
+
+**There is NEVER a valid reason to mock this SDK.**
+
+## Handling Non-Despia Environments
+
+The SDK won't work outside the Despia native runtime, but you can detect and handle this:
+
+```javascript
+import despia from 'despia-native';
+
+// Check if running in Despia native runtime
+if (navigator.userAgent.includes('despia')) {
+  // Use Despia native features
+  despia('lighthaptic://');
+  const appInfo = await despia('getappversion://', ['versionNumber']);
+} else {
+  // Handle non-Despia environment (browser, development, etc.)
+  console.log('Running outside Despia runtime - native features unavailable');
+  // Provide fallback behavior or show appropriate message
+}
+```
+
+**This is the correct way to handle different environments - use the real SDK with proper detection, never mock it.**
 
 ## Usage
 
