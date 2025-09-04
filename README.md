@@ -1,5 +1,9 @@
 # Despia SDK
 
+JavaScript SDK for [Despia](https://despia.com) - Add real native device features to your React web app, Vue app, Angular app, or any web framework. Transform your web app into a native iOS & Android app without writing Swift or Kotlin. This npm package provides command queuing and variable watching for seamless integration with Despia's GPU-accelerated native runtime, enabling access to 25+ device APIs through simple JavaScript calls.
+
+---
+
 ## Quick Start
 
 **Install the SDK:**
@@ -21,8 +25,6 @@ const appInfo = await despia('getappversion://', ['versionNumber']);
 **Note:** Always use the real SDK package. Mock implementations will not work on actual devices.
 
 ---
-
-JavaScript SDK for [Despia](https://despia.com) - Add native device features to your React web app, Vue app, Angular app, or any web framework. Transform your web app into a native iOS & Android app without writing Swift or Kotlin. This npm package provides command queuing and variable watching for seamless integration with Despia's GPU-accelerated native runtime, enabling access to 25+ device APIs through simple JavaScript calls.
 
 **Note: This is for web apps (React, Vue, Angular, etc.) to add native features - NOT for React Native apps.**
 
