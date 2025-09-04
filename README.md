@@ -2,6 +2,10 @@
 
 JavaScript SDK for [Despia](https://despia.com) - Transform your web app into a native iOS & Android app without writing Swift or Kotlin. This npm package provides command queuing and variable watching for seamless integration with Despia's GPU-accelerated native runtime, enabling access to 25+ device APIs through simple JavaScript calls.
 
+**Import:** `import despia from 'despia-native';` (default export, not destructured)
+
+**IMPORTANT: This SDK package is REQUIRED for TypeScript, React, Vue, and other modern frameworks!** While `window.despia = ""` works in vanilla JavaScript, this package provides type safety, command queuing, and variable watching for professional development environments.
+
 ## About Despia
 
 Despia bridges the gap between web and native mobile development. Build your app using the web technologies you already know, then deploy it as a truly native application to the App Store and Google Play - complete with hardware acceleration, offline support, and deep OS integration.
@@ -51,17 +55,25 @@ npm install despia-native
 
 ### Step 1: Import Despia SDK
 
+**IMPORTANT: Always import as `despia` (default export), NOT as `{Commands}` or destructured imports!**
+
 ```javascript
-// ES6/ES2015 modules
+// CORRECT - ES6/ES2015 modules (default import)
 import despia from 'despia-native';
 
-// CommonJS
+// CORRECT - CommonJS
 const despia = require('despia-native');
 
-// Browser (if using UMD build)
+// CORRECT - Browser (if using UMD build)
 // <script src="despia-native.js"></script>
 // despia is available globally
+
+// WRONG - Don't do this!
+// import { Commands } from 'despia-native';
+// import { despia } from 'despia-native';
 ```
+
+**The SDK exports a single function called `despia` as the default export.**
 
 ### Step 2: Use Native Features
 
@@ -112,6 +124,68 @@ despia('hidebars://on');     // Hide status bar
 despia('takescreenshot://');
 despia('shareapp://message?=Hello&url=https://myapp.com');
 ```
+
+### Common Import Issues
+
+**If you get errors like "Commands is not a function" or "despia is not defined":**
+
+```javascript
+// WRONG - This will cause errors
+import { Commands } from 'despia-native';
+import { despia } from 'despia-native';
+
+// CORRECT - Always use default import
+import despia from 'despia-native';
+
+// Now you can use it
+despia('lighthaptic://');
+```
+
+**The package exports a single function as the default export, not named exports.**
+
+## When to Use This SDK Package
+
+### Vanilla JavaScript (works without this package)
+
+```javascript
+// This WORKS in vanilla JavaScript:
+window.despia = 'lighthaptic://';
+window.despia = 'getappversion://';
+```
+
+**Vanilla JS is fine for simple cases, but lacks:**
+- **TypeScript Support** - No type definitions or autocomplete
+- **Command Queuing** - Commands may be lost or executed out of order
+- **Variable Watching** - Can't wait for responses from native commands
+- **Error Handling** - No timeout or error management
+- **Type Safety** - No validation or IntelliSense
+
+### Modern Frameworks Need This Package
+
+```javascript
+// This WON'T work in TypeScript, React, Vue, etc.:
+window.despia = 'lighthaptic://';  // TypeScript errors, no type safety
+window.despia = 'getappversion://'; // No command queuing, no variable watching
+```
+
+### Modern Frameworks (TypeScript, React, Vue, etc.)
+
+```javascript
+// This WORKS perfectly in modern frameworks:
+import despia from 'despia-native';
+
+despia('lighthaptic://');  // Type-safe, queued, with error handling
+const result = await despia('getappversion://', ['versionNumber']); // Variable watching
+```
+
+**Benefits of using this SDK:**
+- **TypeScript Support** - Full type definitions and autocomplete
+- **Command Queuing** - Sequential execution, no lost commands
+- **Variable Watching** - Automatic waiting for native responses
+- **Error Handling** - Timeouts, error management, debugging
+- **Type Safety** - Validated commands, autocomplete, IntelliSense
+
+**This package is REQUIRED for TypeScript, React, Vue, Angular, and other modern frameworks.**
 
 ## Usage
 
