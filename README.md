@@ -47,6 +47,72 @@ Our visual editor allows you to configure native widgets, shortcuts, and dynamic
 npm install despia-native
 ```
 
+## Getting Started
+
+### Step 1: Import Despia SDK
+
+```javascript
+// ES6/ES2015 modules
+import despia from 'despia-native';
+
+// CommonJS
+const despia = require('despia-native');
+
+// Browser (if using UMD build)
+// <script src="despia-native.js"></script>
+// despia is available globally
+```
+
+### Step 2: Use Native Features
+
+```javascript
+// Simple commands (no response needed)
+despia('lighthaptic://');           // Light haptic feedback
+despia('takescreenshot://');        // Take screenshot
+despia('spinneron://');             // Show loading spinner
+
+// Commands that return data (use await)
+const appInfo = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
+console.log(appInfo); // { versionNumber: '1.0.0', bundleNumber: '123' }
+
+const contacts = await despia('readcontacts://', ['contacts']);
+console.log(contacts); // { contacts: [...] }
+```
+
+### Step 3: Handle Responses
+
+```javascript
+// For commands that set variables, watch for them
+const result = await despia('get-uuid://', ['uuid']);
+console.log('Device UUID:', result.uuid);
+
+// For commands with no response, just call them
+despia('lighthaptic://');
+despia('takescreenshot://');
+```
+
+### Quick Examples
+
+```javascript
+// Haptic feedback
+despia('lighthaptic://');    // Light vibration
+despia('heavyhaptic://');    // Heavy vibration
+despia('successhaptic://');  // Success vibration
+
+// App information
+const appInfo = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
+const deviceId = await despia('get-uuid://', ['uuid']);
+
+// UI controls
+despia('spinneron://');      // Show loading
+despia('spinneroff://');     // Hide loading
+despia('hidebars://on');     // Hide status bar
+
+// Screenshots and sharing
+despia('takescreenshot://');
+despia('shareapp://message?=Hello&url=https://myapp.com');
+```
+
 ## Usage
 
 ### Basic Despia Command Execution
@@ -452,7 +518,6 @@ Despia operates through a streamlined protocol handler system, allowing you to i
 - **Direct Access** - Proxy-based access to window variables
 
 ### How It Works
-
 Despia's protocol handler system eliminates the need for complex libraries or dependencies, making it compatible across various frameworks and platforms. The SDK uses the setter pattern to execute commands:
 
 ```javascript
