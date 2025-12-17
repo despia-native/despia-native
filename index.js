@@ -42,20 +42,29 @@
       }
     }
   
-    // Simple variable observer with 5-second timeout
-    function observeDespiaVariable(variableName, callback, timeout = 5000) {
+    // Simple variable observer with longer timeout and guaranteed resolve
+    function observeDespiaVariable(variableName, callback, timeout = 30000) {
         const startTime = Date.now();
-        
+
         function checkVariable() {
-            if (window[variableName] !== undefined) {
-                callback(window[variableName]);
-            } else if (Date.now() - startTime < timeout) {
-                setTimeout(checkVariable, 100);
-            } else {
-                console.error(`Despia timeout: ${variableName} was not set within ${timeout} ms`);
+            const val = window[variableName];
+
+            // Preserve existing semantics: any non-undefined value is "ready"
+            if (val !== undefined) {
+                callback(val);
+                return;
             }
+
+            if (Date.now() - startTime < timeout) {
+                setTimeout(checkVariable, 100);
+                return;
+            }
+
+            console.error(`Despia timeout: ${variableName} was not set within ${timeout} ms`);
+            // Ensure promises watching this variable never hang forever
+            callback(undefined);
         }
-        
+
         checkVariable();
     }
 
@@ -125,11 +134,11 @@
         }
 
         if (variables.length === 1) {
-            // Simple single variable observation with 5-second timeout
+            // Simple single variable observation with 30-second timeout
             return new Promise((resolve) => {
                 observeDespiaVariable(variables[0], (value) => {
                     resolve({ [variables[0]]: value });
-                }, 5000);
+                }, 30000);
             });
         } else {
             // Multiple variables - use VariableTracker (no timeout, expires after 5 minutes)

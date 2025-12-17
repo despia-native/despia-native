@@ -640,8 +640,16 @@ These CSS variables are automatically provided by the Despia native runtime and 
 - **watch** (string[], optional): Array of variable names to watch for in the response
 
 Returns a Promise that resolves when all watched variables are available:
-- **Single variable**: 5-second timeout with simple observation
+- **Single variable**: 30-second timeout with simple observation (Promise always resolves; on timeout it resolves with `undefined`)
 - **Multiple variables**: Uses VariableTracker with 5-minute auto-cleanup
+
+### Timeout behavior
+
+When you call `despia(command, ['someVariable'])`, the SDK waits up to 30 seconds for
+`window.someVariable` to be set by the native runtime. If it appears earlier, the
+Promise resolves with that value. If it is never set, the Promise still resolves
+after 30 seconds with `undefined` and a timeout is logged to the console. This
+prevents hanging Promises for long-running or failing native operations.
 
 ### Direct Property Access
 
