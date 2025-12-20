@@ -49,8 +49,15 @@
         function checkVariable() {
             const val = window[variableName];
 
-            // Preserve existing semantics: any non-undefined value is "ready"
-            if (val !== undefined) {
+            // Treat undefined, null, "n/a", empty objects, and empty arrays as "not ready"
+            const isEmpty = val === undefined || 
+                           val === null || 
+                           val === "n/a" ||
+                           (typeof val === 'object' && val !== null && Object.keys(val).length === 0) ||
+                           (Array.isArray(val) && val.length === 0);
+
+            if (!isEmpty) {
+                // Real value arrived → resolve with it
                 callback(val);
                 return;
             }
@@ -60,8 +67,8 @@
                 return;
             }
 
+            // Timeout: still resolve so promises don't hang
             console.error(`Despia timeout: ${variableName} was not set within ${timeout} ms`);
-            // Ensure promises watching this variable never hang forever
             callback(undefined);
         }
 
