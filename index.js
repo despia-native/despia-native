@@ -41,23 +41,39 @@
         processQueue();
       }
     }
+
+    // Generate a safe signature for change detection
+    function safeSig(val) {
+        if (val === undefined) return 'u';
+        if (val === null) return 'n';
+        const t = typeof val;
+        if (t !== 'object') return `${t}:${String(val)}`;
+        try { return `o:${JSON.stringify(val)}`; } catch { return 'o:[unserializable]'; }
+    }
   
-    // Simple variable observer with longer timeout and guaranteed resolve
+    // Simple variable observer with longer timeout, change detection, and guaranteed resolve
     function observeDespiaVariable(variableName, callback, timeout = 30000) {
         const startTime = Date.now();
+        const initialRef = window[variableName];
+        const initialSig = safeSig(initialRef);
+
+        const ready = (val) => {
+            if (val === undefined || val === null || val === "n/a") return false;
+            if (Array.isArray(val) && val.length === 0) return false;
+            if (val && typeof val === 'object' && !Array.isArray(val) && Object.keys(val).length === 0) return false;
+            return true;
+        };
+
+        const changed = (val) => {
+            if (val !== initialRef) return true;
+            return safeSig(val) !== initialSig;
+        };
 
         function checkVariable() {
             const val = window[variableName];
 
-            // Treat undefined, null, "n/a", empty objects, and empty arrays as "not ready"
-            const isEmpty = val === undefined || 
-                           val === null || 
-                           val === "n/a" ||
-                           (typeof val === 'object' && val !== null && Object.keys(val).length === 0) ||
-                           (Array.isArray(val) && val.length === 0);
-
-            if (!isEmpty) {
-                // Real value arrived → resolve with it
+            if (ready(val) && changed(val)) {
+                // Fresh, non-empty value arrived → resolve with it
                 callback(val);
                 return;
             }
@@ -139,6 +155,11 @@
         if (!variables || variables.length === 0) {
             return Promise.resolve({});
         }
+
+        // Pre-clear watched vars to avoid stale immediate resolves
+        variables.forEach((name) => {
+            try { delete window[name]; } catch (e) { window[name] = undefined; }
+        });
 
         if (variables.length === 1) {
             // Simple single variable observation with 30-second timeout
