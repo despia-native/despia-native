@@ -58,13 +58,16 @@
         const initialSig = safeSig(initialRef);
 
         const ready = (val) => {
-            if (val === undefined || val === null || val === "n/a") return false;
+            if (val === undefined || val === "n/a") return false;
             if (Array.isArray(val) && val.length === 0) return false;
             if (val && typeof val === 'object' && !Array.isArray(val) && Object.keys(val).length === 0) return false;
             return true;
         };
 
         const changed = (val) => {
+            // Special case: if value is null, always consider it changed (immediate signal)
+            if (val === null) return true;
+            
             if (val !== initialRef) return true;
             return safeSig(val) !== initialSig;
         };
