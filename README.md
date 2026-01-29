@@ -91,10 +91,22 @@ Our visual editor allows you to configure native widgets, shortcuts, and dynamic
 ## Installation (REQUIRED - NO EXCEPTIONS)
 
 ```bash
+# npm
 npm install despia-native
+
+# pnpm
+pnpm install despia-native
+
+# yarn
+yarn add despia-native
 ```
 
 **This is NOT optional. Your app will NOT work without this package.**
+
+**Package Manager Support:**
+- ✅ **npm** - Fully supported
+- ✅ **pnpm** - Fully supported (v1.0.19+)
+- ✅ **yarn** - Fully supported
 
 **Do not attempt to:**
 - Write your own version
