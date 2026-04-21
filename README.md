@@ -17,15 +17,7 @@ The runtime runs on WKWebView (iOS) and the Chromium-based WebView (Android) wit
 
 Add the Despia MCP to give your AI assistant full knowledge of the `despia-native` API.
 
-**Install in Cursor**
-
-[Install in Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=Despia&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vc2V0dXAuZGVzcGlhLmNvbS9tY3AifQ==)
-
-**Install in VS Code**
-
-[Install in VS Code](vscode:mcp/install?%7B%22name%22%3A%22Despia%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fsetup.despia.com%2Fmcp%22%7D)
-
-![Cursor MCP](https://cursor.com/deeplink/mcp-install-dark.svg) ![VS Code MCP](https://img.shields.io/badge/Install_in_VS_Code-007ACC?logo=visualstudiocode&logoColor=white)
+[**Install in Cursor**](cursor://anysphere.cursor-deeplink/mcp/install?name=Despia&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vc2V0dXAuZGVzcGlhLmNvbS9tY3AifQ==) · [**Install in VS Code**](vscode:mcp/install?%7B%22name%22%3A%22Despia%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fsetup.despia.com%2Fmcp%22%7D)
 
 Full manual steps and other editors: [MCP Server setup guide](https://setup.despia.com/mcp-server).
 
