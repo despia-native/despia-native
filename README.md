@@ -17,7 +17,10 @@ The runtime runs on WKWebView (iOS) and the Chromium-based WebView (Android) wit
 
 Add the Despia MCP to give your AI assistant full knowledge of the `despia-native` API.
 
-**Install:** npm and GitHub only allow normal `https://` links in READMEs, so `cursor://` / `vscode:` install URLs are not clickable here. Use the guide, or copy a deeplink below into a browser or editor that accepts custom protocols.
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://despia.com/mcp/cursor)
+[![Install in VS Code](https://img.shields.io/badge/Install_in_VS_Code-007ACC?logo=visualstudiocode&logoColor=white)](https://despia.com/mcp/vs-code)
+
+The badges use **HTTPS** links on [despia.com](https://despia.com) that redirect to the `cursor://` / `vscode:` installers (plain `cursor://` / `vscode:` links are not allowed as README `href` values on npm and GitHub).
 
 **[MCP Server setup guide (Cursor, VS Code, and more)](https://setup.despia.com/mcp-server)**
 
