@@ -17,9 +17,21 @@ The runtime runs on WKWebView (iOS) and the Chromium-based WebView (Android) wit
 
 Add the Despia MCP to give your AI assistant full knowledge of the `despia-native` API.
 
-[**Install in Cursor**](cursor://anysphere.cursor-deeplink/mcp/install?name=Despia&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vc2V0dXAuZGVzcGlhLmNvbS9tY3AifQ==) · [**Install in VS Code**](vscode:mcp/install?%7B%22name%22%3A%22Despia%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fsetup.despia.com%2Fmcp%22%7D)
+**Install:** npm and GitHub only allow normal `https://` links in READMEs, so `cursor://` / `vscode:` install URLs are not clickable here. Use the guide, or copy a deeplink below into a browser or editor that accepts custom protocols.
 
-Full manual steps and other editors: [MCP Server setup guide](https://setup.despia.com/mcp-server).
+**[MCP Server setup guide (Cursor, VS Code, and more)](https://setup.despia.com/mcp-server)**
+
+**Cursor deeplink** (copy the full line):
+
+```text
+cursor://anysphere.cursor-deeplink/mcp/install?name=Despia&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vc2V0dXAuZGVzcGlhLmNvbS9tY3AifQ==
+```
+
+**VS Code deeplink** (copy the full line):
+
+```text
+vscode:mcp/install?%7B%22name%22%3A%22Despia%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fsetup.despia.com%2Fmcp%22%7D
+```
 
 **Web-based builders** (Lovable, Bolt, v0, etc.) — paste the MCP URL where your tool asks for it:
 
