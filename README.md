@@ -1,1326 +1,669 @@
-# Despia SDK
+# Despia Native
 
-JavaScript SDK for [Despia](https://despia.com) - Add real native device features to your React web app, Vue app, Angular app, or any web framework. Transform your web app into a native iOS & Android app without writing Swift or Kotlin. This npm package provides command queuing and variable watching for seamless integration with Despia's GPU-accelerated native runtime, enabling access to 25+ device APIs through simple JavaScript calls.
+JavaScript SDK for [Despia](https://despia.com). Build with any web framework, access 50+ native device capabilities through a single JavaScript function, and publish to iOS and Android from a browser. No Swift, no Kotlin, no terminal.
+
+[![npm](https://img.shields.io/npm/v/despia-native)](https://www.npmjs.com/package/despia-native)
+[![license](https://img.shields.io/npm/l/despia-native)](LICENSE)
+
+**[Documentation](https://setup.despia.com)** | **[AI Agent Index](https://setup.despia.com/llms.txt)** | **[iOS Deployment](https://setup.despia.com/deployment/apple-ios/automatic)** | **[Android Deployment](https://setup.despia.com/deployment/google-android/automatic)**
+
+Despia is the next generation of web-native development. Unlike earlier hybrid frameworks that routed files through JavaScript, forced Base64 encoding, imposed storage quotas, and ran on insecure `file://` origins, Despia runs your app on a real secure origin (`http://localhost` via Local Server, or your remote URL). Standard web APIs work without restrictions. File operations bypass JavaScript entirely and go directly to the native file system. A 500MB video file uses roughly 100 bytes of JS heap rather than 1.6GB.
+
+The runtime has been in production since 2011, powering over 7,500 apps on the foundation that became Despia in 2023. Native capabilities are implemented in Swift and Java and called from JavaScript through a single typed function.
+
+---
+
+## MCP Server
+
+Add the Despia MCP to give your AI assistant full knowledge of the `despia-native` API.
+
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=Despia&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vc2V0dXAuZGVzcGlhLmNvbS9tY3AifQ==)
+[![Install in VS Code](https://img.shields.io/badge/Install_in_VS_Code-007ACC?logo=visualstudiocode&logoColor=white)](vscode:mcp/install?%7B%22name%22%3A%22Despia%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fsetup.despia.com%2Fmcp%22%7D)
+
+```
+https://setup.despia.com/mcp
+```
+
+Look for "Add MCP", "MCP Settings", or "Personal Connectors" in your builder. Requires Node.js v18+ for local tools.
+
+---
+
+## Table of Contents
+
+- [MCP Server](#mcp-server)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Environment Detection](#environment-detection)
+- [AI Agent Rules](#ai-agent-rules)
+- [API Reference](#api-reference)
+- [Features](#features)
+  - [Haptic Feedback](#haptic-feedback)
+  - [Identity Vault](#identity-vault)
+  - [GPS Location](#gps-location)
+  - [RevenueCat In-App Purchases](#revenuecat-in-app-purchases)
+  - [Push Notifications](#push-notifications)
+  - [OAuth Authentication](#oauth-authentication)
+  - [Clipboard](#clipboard)
+  - [Contacts](#contacts)
+  - [App Information and Device Data](#app-information-and-device-data)
+  - [UI Controls and Styling](#ui-controls-and-styling)
+  - [File and Media Operations](#file-and-media-operations)
+  - [Web Storage APIs](#web-storage-apis)
+  - [Local CDN](#local-cdn)
+  - [Local Server](#local-server)
+- [Safe Area](#safe-area)
+- [Web Apps vs React Native](#web-apps-vs-react-native)
+- [License](#license)
+
+---
+
+## Installation
+
+```bash
+npm install despia-native
+# or
+pnpm add despia-native
+# or
+yarn add despia-native
+```
+
+Do not write mock implementations or use `window.despia` directly in modern frameworks. The real SDK is required for any Despia functionality to work.
 
 ---
 
 ## Quick Start
 
-**Install the SDK:**
-```bash
-npm install despia-native
-```
-
-**Use it immediately:**
-```javascript
+```js
 import despia from 'despia-native';
 
-// Simple commands
+// Fire-and-forget commands
 despia('lighthaptic://');
 
-// Commands with responses
-const appInfo = await despia('getappversion://', ['versionNumber']);
+// Commands that return data
+const appInfo = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
+console.log(appInfo.versionNumber); // "1.0.0"
 ```
 
-**Note:** Always use the real SDK package. Mock implementations will not work on actual devices.
+The SDK exports a single function as the default export. Always use a default import, not a named import.
+
+```js
+// Correct
+import despia from 'despia-native';
+
+// Wrong
+import { despia } from 'despia-native';
+import { Commands } from 'despia-native';
+```
 
 ---
 
-**Note: This is for web apps (React, Vue, Angular, etc.) to add native features - NOT for React Native apps.**
+## Environment Detection
 
-## Web Apps vs React Native
+The SDK only activates inside the Despia native runtime. Gate native calls using these checks:
 
-**This SDK is for:**
-- React web apps (create-react-app, Next.js, Vite, etc.)
-- Vue web apps
-- Angular web apps  
-- Svelte web apps
-- Any web framework or vanilla JavaScript
+```js
+const isDespia = navigator.userAgent.toLowerCase().includes('despia');
 
-**This SDK is NOT for:**
-- React Native apps
-- Expo apps
-- Native mobile development
+const isDespiaIOS = isDespia &&
+  (navigator.userAgent.toLowerCase().includes('iphone') ||
+   navigator.userAgent.toLowerCase().includes('ipad'));
 
-**If you're building a React Native app, this SDK won't work for you.**
+const isDespiaAndroid = isDespia &&
+  navigator.userAgent.toLowerCase().includes('android');
 
-**Import:** `import despia from 'despia-native';` (default export, not destructured)
-
-**IMPORTANT: This SDK package is REQUIRED for TypeScript, React, Vue, and other modern frameworks!** While `window.despia = ""` works in vanilla JavaScript, this package provides type safety, command queuing, and variable watching for professional development environments.
-
-## About Despia
-
-Despia bridges the gap between web and native mobile development. Build your React web app, Vue app, Angular app, or any web framework using the technologies you already know, then deploy it as a truly native application to the App Store and Google Play - complete with hardware acceleration, offline support, and deep OS integration.
-
-Our visual editor allows you to configure native widgets, shortcuts, and dynamic app behaviors without touching Xcode or Android Studio. Ship to both app stores with one-click deployment, automatic CI/CD pipelines, and over-the-air updates. Export clean, human-readable Swift and Kotlin source code anytime - you own everything, no vendor lock-in.
-
-**Go from web app to app store in a weekend - with full native capabilities.**
-
-### Key Features:
-- **Web Framework Support** - Works with React web apps, Vue web apps, Angular web apps, Svelte web apps, vanilla JS, or any web framework
-- **NOT for React Native** - This is for web apps to add native features, not React Native apps
-- **Visual Configuration** - Set up native features through an intuitive interface
-- **Zero Native Coding** - Access device APIs without writing Swift or Kotlin
-- **Source Code Export** - Get complete Xcode and Android Studio projects you can modify
-- **True Ownership** - Full access to generated code, no restrictions
-- **One-Click Publishing** - Direct deployment to App Store & Google Play
-- **Automated Pipeline** - Built-in CI/CD with code signing and provisioning
-- **OTA Updates** - Push updates instantly without app store review
-- **Performance** - 60fps GPU-accelerated rendering
-- **Device API Access** - NFC, HealthKit, Siri, RevenueCat, and 20+ more
-- **Single Codebase** - Maintain one web project for iOS, Android, and web
-
-### Native Device Features:
-- **App Links & Deep Linking** - Universal links and app-to-app communication
-- **Widgets & App Clips** - Home screen widgets and instant app experiences  
-- **In-App Purchases** - RevenueCat integration for subscriptions and payments
-- **Push Notifications** - Local and remote notifications with rich media
-- **Camera & Media** - Camera access, photo library, and file management
-- **Biometric Authentication** - Face ID, Touch ID, and fingerprint
-- **Location Services** - Foreground and background GPS tracking
-- **Contacts** - Address book access with proper permissions
-- **Haptic Feedback** - Tactile responses for user interactions
-- **App Analytics** - Version tracking, bundle IDs, device identifiers
-- **Screenshots** - Programmatic screen capture
-- **Status Bar** - Dynamic styling and visibility control
-- **Privacy Controls** - IDFA tracking and permission management
-- **Share Sheets** - Native sharing UI
-- **UI Controls** - Loading indicators, navigation bars, dynamic layouts
-- **Plus 8+ additional native capabilities**
-
-## Installation (REQUIRED - NO EXCEPTIONS)
-
-```bash
-# npm
-npm install despia-native
-
-# pnpm
-pnpm install despia-native
-
-# yarn
-yarn add despia-native
-```
-
-**This is NOT optional. Your app will NOT work without this package.**
-
-**Package Manager Support:**
-- ✅ **npm** - Fully supported
-- ✅ **pnpm** - Fully supported (v1.0.19+)
-- ✅ **yarn** - Fully supported
-
-**Do not attempt to:**
-- Write your own version
-- Copy/paste a mock implementation  
-- Use window.despia directly in frameworks
-- Create a "simplified" version
-
-**The real SDK is required for ANY Despia functionality to work.**
-
-## Important Notes
-
-### Simple Function API
-The SDK exports a single function - no initialization or setup required:
-
-```javascript
-import despia from 'despia-native';
-
-// Just call it directly
-despia('lighthaptic://');
-despia('takescreenshot://');
-```
-
-### Common Mistakes to Avoid
-```javascript
-// Don't create mock implementations
-const despia = (command) => console.log(command); // Won't work on devices
-
-// Don't use non-existent methods
-despia.ready();    // This method doesn't exist
-despia.init();     // This method doesn't exist
-despia.setup();    // This method doesn't exist
-```
-
-## Getting Started
-
-### Step 1: Import Despia SDK
-
-**IMPORTANT: Always import as `despia` (default export), NOT as `{Commands}` or destructured imports!**
-
-```javascript
-// CORRECT - ES6/ES2015 modules (default import)
-import despia from 'despia-native';
-
-// CORRECT - CommonJS
-const despia = require('despia-native');
-
-// CORRECT - Browser (if using UMD build)
-// <script src="despia-native.js"></script>
-// despia is available globally
-
-// WRONG - Don't do this!
-// import { Commands } from 'despia-native';
-// import { despia } from 'despia-native';
-```
-
-**The SDK exports a single function called `despia` as the default export.**
-
-### Step 2: Use Native Features (No Setup Required)
-
-```javascript
-// That's it! No initialization needed. Just call despia() directly:
-
-// Simple commands (no response needed)
-despia('lighthaptic://');           // Light haptic feedback
-despia('takescreenshot://');        // Take screenshot
-despia('spinneron://');             // Show loading spinner
-
-// Commands that return data (use await)
-const appInfo = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
-console.log(appInfo); // { versionNumber: '1.0.0', bundleNumber: '123' }
-
-const contacts = await despia('readcontacts://', ['contacts']);
-console.log(contacts); // { contacts: [...] }
-```
-
-### Step 3: Handle Responses
-
-```javascript
-// For commands that set variables, watch for them
-const result = await despia('get-uuid://', ['uuid']);
-console.log('Device UUID:', result.uuid);
-
-// For commands with no response, just call them
-despia('lighthaptic://');
-despia('takescreenshot://');
-```
-
-### Quick Examples
-
-```javascript
-// Haptic feedback
-despia('lighthaptic://');    // Light vibration
-despia('heavyhaptic://');    // Heavy vibration
-despia('successhaptic://');  // Success vibration
-
-// App information
-const appInfo = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
-const deviceId = await despia('get-uuid://', ['uuid']);
-
-// UI controls
-despia('spinneron://');      // Show loading
-despia('spinneroff://');     // Hide loading
-despia('hidebars://on');     // Hide status bar
-
-// Screenshots and sharing
-despia('takescreenshot://');
-despia('shareapp://message?=Hello&url=https://myapp.com');
-```
-
-### Common Import Issues
-
-**If you get errors like "Commands is not a function" or "despia is not defined":**
-
-```javascript
-// WRONG - This will cause errors
-import { Commands } from 'despia-native';
-import { despia } from 'despia-native';
-
-// CORRECT - Always use default import
-import despia from 'despia-native';
-
-// Now you can use it
-despia('lighthaptic://');
-```
-
-**The package exports a single function as the default export, not named exports.**
-
-## When to Use This SDK Package
-
-### Vanilla JavaScript (works without this package)
-
-```javascript
-// This WORKS in vanilla JavaScript:
-window.despia = 'lighthaptic://';
-window.despia = 'getappversion://';
-```
-
-**Vanilla JS is fine for simple cases, but lacks:**
-- **TypeScript Support** - No type definitions or autocomplete
-- **Command Queuing** - Commands may be lost or executed out of order
-- **Variable Watching** - Can't wait for responses from native commands
-- **Error Handling** - No timeout or error management
-- **Type Safety** - No validation or IntelliSense
-
-### Modern Frameworks Need This Package
-
-```javascript
-// This WON'T work in TypeScript, React, Vue, etc.:
-window.despia = 'lighthaptic://';  // TypeScript errors, no type safety
-window.despia = 'getappversion://'; // No command queuing, no variable watching
-```
-
-### Modern Frameworks (TypeScript, React, Vue, etc.)
-
-```javascript
-// This WORKS perfectly in modern frameworks:
-import despia from 'despia-native';
-
-despia('lighthaptic://');  // Type-safe, queued, with error handling
-const result = await despia('getappversion://', ['versionNumber']); // Variable watching
-```
-
-**Benefits of using this SDK:**
-- **TypeScript Support** - Full type definitions and autocomplete
-- **Command Queuing** - Sequential execution, no lost commands
-- **Variable Watching** - Automatic waiting for native responses
-- **Error Handling** - Timeouts, error management, debugging
-- **Type Safety** - Validated commands, autocomplete, IntelliSense
-
-**This package is REQUIRED for TypeScript, React, Vue, Angular, and other modern frameworks.**
-
-## Development Notes
-
-### Environment Detection
-The SDK only works within the Despia native runtime. For development and testing:
-
-```javascript
-import despia from 'despia-native';
-
-if (navigator.userAgent.includes('despia')) {
-  // Use native features
+if (isDespia) {
   despia('lighthaptic://');
 } else {
-  // Handle non-Despia environment
-  console.log('Running outside Despia runtime');
+  // Fallback for browser or development environment
 }
 ```
 
-### Always Use the Real Package
-- Use the real SDK in all environments (development, testing, production)
-- Don't create mock implementations - they won't work on actual devices
-- The SDK handles missing runtime gracefully
+---
 
-## Handling Non-Despia Environments
+## AI Agent Rules
 
-The SDK won't work outside the Despia native runtime, but you can detect and handle this:
+If you are an AI coding agent generating Despia app code, follow these rules:
 
-```javascript
-import despia from 'despia-native';
+- Import as a default: `import despia from 'despia-native'`
+- Do not write to `window.despia` directly; it is used internally by the SDK
+- Gate all native calls using the environment checks above
+- For offline (Local Server) apps, bundle the SDK via a package manager so it is available when the app is served from `http://localhost`
+- For Local CDN downloads, do not `await` `localcdn://write` with a watch key; use `window.contentServerChange(item)` or poll with `localcdn://read`
+- For the HTTP upload API, do not hardcode localhost ports; use `const host = window.location.host`
 
-// Check if running in Despia native runtime
-if (navigator.userAgent.includes('despia')) {
-  // Use Despia native features
-  despia('lighthaptic://');
-  const appInfo = await despia('getappversion://', ['versionNumber']);
-} else {
-  // Handle non-Despia environment (browser, development, etc.)
-  console.log('Running outside Despia runtime - native features unavailable');
-  // Provide fallback behavior or show appropriate message
-}
-```
-
-**This is the correct way to handle different environments - use the real SDK with proper detection, never mock it.**
-
-## Usage
-
-### Basic Despia Command Execution
-
-```javascript
-import despia from 'despia-native';
-
-// Execute a Despia protocol command (no response needed)
-despia('lighthaptic://');
-
-// Execute command and watch for response variables (await needed)
-const result = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
-console.log(result); // { versionNumber: '1.0.0', bundleNumber: '123' }
-```
-
-### Despia Command Examples
-
-```javascript
-// Native Widgets
-despia('widget://${svg}?refresh=${refresh_time}');
-
-// RevenueCat In-App Purchases
-despia('revenuecat://purchase?external_id=user_777&product=monthly_premium');
-
-// Restore Purchases
-const purchaseData = await despia("getpurchasehistory://", ["restoredData"]);
-
-// RevenueCat Paywalls
-despia('revenuecat://launchPaywall?external_id=user_777&offering=default');
-
-// Identity Vault
-await despia(`setvault://?key=userId&value=user123&locked=false`);
-const vaultData = await despia(`readvault://?key=userId`, ['userId']);
-
-// OAuth Authentication
-despia(`oauth://?url=${encodeURIComponent(oauthUrl)}`);
-
-// Local Storage
-const encoded = encodeURIComponent(JSON.stringify(userData));
-await despia(`writevalue://${encoded}`);
-const data = await despia("readvalue://", ["storedValues"]);
-
-// Read Clipboard
-const clipboardData = await despia('getclipboard://', ['clipboarddata']);
-
-// Open App Settings
-despia("settingsapp://");
-
-// Contact Permissions
-despia('requestcontactpermission://');
-const contacts = await despia('readcontacts://', ['contacts']);
-
-// Background Location
-despia('backgroundlocationon://');
-// Use native browser geolocation API (not despia native runtime)
-const watchId = navigator.geolocation.watchPosition(
-  (position) => console.log('Location:', position),
-  (error) => console.error('Location error:', error)
-);
-// To stop
-despia('backgroundlocationoff://');
-navigator.geolocation.clearWatch(watchId);
-
-// Push Notifications
-despia('registerpush://');
-despia('sendlocalpushmsg://push.send?s=60&msg=Hello&!#New Message&!#https://myapp.com');
-// Set OneSignal external user ID (call on every app load)
-despia(`setonesignalplayerid://?user_id=${YOUR_LOGGED_IN_USER_ID}`);
-
-// Haptic Feedback
-despia('lighthaptic://');
-despia('heavyhaptic://');
-despia('successhaptic://');
-despia('warninghaptic://');
-despia('errorhaptic://');
-
-// App Information
-const appInfo = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
-const deviceInfo = await despia('get-uuid://', ['uuid']);
-
-// Screenshots and Scanning
-despia('takescreenshot://');
-despia('scanningmode://auto');
-despia('scanningmode://on');
-despia('scanningmode://off');
-
-// Store and Location
-const storeData = await despia('getstorelocation://', ['storeLocation']);
-
-// Image and File Operations
-despia('savethisimage://?url=${image_url}');
-despia('file://${file_url}');
-
-// App Control
-despia('reset://');
-const trackingData = await despia('user-disable-tracking://', ['trackingDisabled']);
-
-// UI Controls
-despia('spinneron://');
-despia('spinneroff://');
-despia('hidebars://on');
-despia('hidebars://off');
-
-// Sharing
-despia('shareapp://message?=${message}&url=${url}');
-
-// Status Bar Styling
-despia('statusbarcolor://{255, 255, 255}');
-despia('statusbartextcolor://{black}');
-
-// Biometric Authentication
-despia('bioauth://');
-```
-
-### Direct Window Variable Access
-
-```javascript
-// Access any window variable directly (useful for Despia response data)
-const currentUser = despia.currentUser;
-const deviceInfo = despia.deviceInfo;
-const appVersion = despia.appVersion;
-```
-
-### Advanced Usage with Variable Watching
-
-```javascript
-// Watch multiple response variables
-const appData = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
-
-// Chain multiple Despia commands
-despia('lighthaptic://');
-const appData2 = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
-despia('successhaptic://');
-```
-
-### Background Location Workflow
-
-Background location tracking requires a two-step process:
-
-```javascript
-// Step 1: Enable native background location tracking via Despia
-despia('backgroundlocationon://');
-
-// Step 2: Use native browser geolocation API for actual tracking (not despia native runtime)
-const watchId = navigator.geolocation.watchPosition(
-  (position) => {
-    console.log('Location update:', {
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-      accuracy: position.coords.accuracy,
-      timestamp: position.timestamp
-    });
-  },
-  (error) => {
-    console.error('Location error:', error);
-  },
-  {
-    enableHighAccuracy: true,
-    timeout: 10000,
-    maximumAge: 60000
-  }
-);
-
-// To stop tracking:
-// Step 1: Disable native background tracking via Despia
-despia('backgroundlocationoff://');
-// Step 2: Clear browser geolocation watch (native API)
-navigator.geolocation.clearWatch(watchId);
-```
-
-### Contact Access Workflow
-
-```javascript
-// Step 1: Request contact permission
-despia('requestcontactpermission://');
-
-// Step 2: Read contacts after permission granted
-const contactData = await despia('readcontacts://', ['contacts']);
-console.log('Contacts:', contactData.contacts);
-```
-
-### RevenueCat Paywall Workflow
-
-Create a payment system that uses RevenueCat Paywalls by launching native paywall interfaces configured in your RevenueCat dashboard:
-
-```javascript
-// First, install the package:
-// npm install despia-native
-
-// Then import it:
-import despia from 'despia-native';
-
-// Launch a paywall for a specific offering
-despia('revenuecat://launchPaywall?external_id=USER_ID&offering=default');
-
-// Example offerings you might configure:
-// - "default" - your main offering
-// - "premium" - premium tier offering
-// - "annual_sale" - special promotional offering
-```
-
-**Handling Purchase Success:**
-
-The Despia Native Runtime will call the global function `onRevenueCatPurchase()` when an in-app purchase or subscription is successfully made on the client side. Although this should not grant access immediately, it's a good time to start polling your backend to check if the RevenueCat webhook has already updated the user's status or plan permissions.
-
-```javascript
-// Define the global callback function
-window.onRevenueCatPurchase = function() {
-  console.log('Purchase successful! Polling backend for status update...');
-  
-  // Start polling your backend to check if RevenueCat webhook
-  // has updated the user's status or plan permissions
-  // This ensures you don't grant access before the webhook processes
-};
-```
-
-This will launch a native paywall interface configured in your RevenueCat dashboard, handling purchases through Apple App Store and Google Play billing.
-
-### Identity Vault Workflow
-
-The identity vault provides persistent, cross-device storage with optional biometric protection:
-
-```javascript
-// First, install the package:
-// npm install despia-native
-
-// Then import it:
-import despia from 'despia-native';
-
-// Store identity data
-await despia(`setvault://?key=${keyName}&value=${value}&locked=${isLocked}`);
-
-// Retrieve identity data
-const data = await despia(`readvault://?key=${keyName}`, [keyName]);
-const value = data[keyName];
-```
-
-**Parameters:**
-
-- **key** - Name for your stored data (use simple names like "userId", "deviceId", "sessionToken")
-- **value** - The data to store (text/string)
-- **locked** - Set to `'true'` to require Face ID/fingerprint, `'false'` for normal storage
-
-**Features:**
-
-- **Persistent storage** - Data survives app restarts, updates, and even uninstall/reinstall
-- **Cross-device sync** - Works across all user's devices with the same Apple ID or Google account
-- **User tracking** - Identify the same user even after they uninstall and reinstall your app
-- **Face ID protection** - Optional biometric lock for sensitive actions
-- **Automatic timeout** - 30-second timeout prevents app freezing
-
-**Perfect for:**
-
-- Identifying users across sessions
-- Preventing free trial abuse (track device even after uninstall)
-- Storing login session tokens
-- Protecting sensitive actions with Face ID/Touch ID
-- Saving user preferences and app settings
-
-**Example Usage:**
-
-```javascript
-// Store user ID (normal storage)
-await despia(`setvault://?key=userId&value=user123&locked=false`);
-
-// Store session token with biometric protection
-await despia(`setvault://?key=sessionToken&value=abc123xyz&locked=true`);
-
-// Retrieve stored data
-const userData = await despia(`readvault://?key=userId`, ['userId']);
-console.log('User ID:', userData.userId);
-
-const sessionData = await despia(`readvault://?key=sessionToken`, ['sessionToken']);
-console.log('Session Token:', sessionData.sessionToken);
-```
-
-### OAuth Authentication Workflow
-
-Launch OAuth authentication in a secure native browser session:
-
-```javascript
-// First, install the package:
-// npm install despia-native
-
-// Then import it:
-import despia from 'despia-native';
-
-// Launch OAuth flow
-const oauthUrl = 'https://your-provider.com/oauth/authorize?client_id=xxx&redirect_uri=xxx';
-despia(`oauth://?url=${encodeURIComponent(oauthUrl)}`);
-```
-
-**How it works:**
-
-1. **Opens secure browser session:**
-   - **iOS**: ASWebAuthenticationSession (secure Safari sheet)
-   - **Android**: Chrome Custom Tabs (secure Chrome overlay)
-
-2. **User completes OAuth** in the secure browser session
-
-3. **Parse tokens from callback URL** - OAuth providers typically return tokens in the URL hash or query parameters:
-   ```javascript
-   // Example: Parse tokens from URL hash (implicit flow)
-   const hash = window.location.hash.substring(1);
-   const hashParams = new URLSearchParams(hash);
-   const accessToken = hashParams.get('access_token');
-   const refreshToken = hashParams.get('refresh_token');
-   ```
-
-4. **Close browser and return to app** - Use your app's deeplink scheme with the `oauth/` prefix:
-   ```javascript
-   // From your callback page (still in secure browser session)
-   window.location.href = `myapp://oauth/auth?access_token=${accessToken}&refresh_token=${refreshToken}`;
-   ```
-
-5. **Handle deeplink in app** - The native app intercepts the deeplink, closes the browser session, and navigates your WebView to the specified path with query parameters.
-
-**Deeplink format:** `{scheme}://oauth/{path}?params`
-
-- `myapp://` - Your app's deeplink scheme
-- `oauth/` - Required prefix that tells native code to close the browser session
-- `{path}` - Where to navigate in your app (e.g., `auth`, `home`, `profile`)
-- `?params` - Query parameters passed to that page
-
-**Examples:**
-- `myapp://oauth/auth?access_token=xxx` - Closes browser, opens `/auth?access_token=xxx`
-- `myapp://oauth/home` - Closes browser, opens `/home`
-- `myapp://oauth/profile?tab=settings` - Closes browser, opens `/profile?tab=settings`
-
-**Perfect for:**
-- Google, Facebook, Apple, GitHub, and other OAuth providers
-- Secure authentication flows without leaving your app
-- Native browser sessions with automatic cleanup
-
-### Local Storage Workflow
-
-Create a local storage system with cross-platform support (data is cleared on app uninstall):
-
-```javascript
-// First, install the package:
-// npm install despia-native
-
-// Then import it:
-import despia from 'despia-native';
-
-// This SDK is compatible only with the Native Despia Runtime.
-// Ensure that the User Agent string includes "despia" before running this code.
-// If the User Agent string doesn't include "despia" you can use Local Storage as a web fallback.
-
-// Save data
-const userData = { refresh_token: "SSBMT1ZFIERFU1BJQSBOQVRJVkUgU08gTVVDSCBJIFdBTk5BIEtJU1MgSVQh" };
-const encoded = encodeURIComponent(JSON.stringify(userData));
-await despia(`writevalue://${encoded}`);
-
-// Retrieve data
-const data = await despia("readvalue://", ["storedValues"]);
-const userData = JSON.parse(decodeURIComponent(data.storedValues));
-console.log(userData.refresh_token);
-```
-
-**How it works:**
-
-- **Save data**: Use `writevalue://` with a JSON-encoded string to store data on the device
-- **Retrieve data**: Use `readvalue://` with `["storedValues"]` to get the stored data
-- **Data format**: Data is stored as a single string and returned in the response object
-- **Cross-platform**: Works on both iOS and Android
-- **Lifecycle**: Data persists across app restarts but is cleared on app uninstall
-
-**Important Notes:**
-
-- **Runtime compatibility**: Only works with Despia Native Runtime (check User Agent for "despia")
-- **Web fallback**: Use Local Storage as a fallback if not running in Despia Native Runtime
-- **UI blocking**: Refrain from blocking any UI elements or adding loading screens before data is loaded, as most sessions will not have initial data yet if no data has been stored
-
-**Perfect for:**
-
-- Storing user preferences and settings
-- Caching temporary data
-- Storing session tokens (non-sensitive)
-- App configuration data
-
-### Restore Purchases Workflow
-
-Retrieve purchase history from the native app stores to implement "Restore Purchases" functionality and verify user entitlements:
-
-```javascript
-// First, install the package:
-// npm install despia-native
-
-// Then import it:
-import despia from 'despia-native';
-
-// Retrieve purchase history
-const data = await despia("getpurchasehistory://", ["restoredData"]);
-const purchases = data.restoredData;
-console.log(purchases);
-```
-
-**How it works:**
-
-Despia queries the native platform's billing system to retrieve all purchases associated with the current user's App Store or Google Play account. This includes active subscriptions, expired subscriptions, consumables, and non-consumable (lifetime) purchases. The data is normalized into a consistent format across both iOS and Android platforms.
-
-**Response Structure:**
-
-Each purchase object in the response array includes:
-
-- **transactionId** - Unique identifier for this specific transaction
-- **originalTransactionId** - Identifier linking to the original purchase (useful for subscription renewals)
-- **productId** - The product identifier configured in App Store Connect / Google Play Console
-- **type** - Either `"subscription"` or `"product"` (one-time purchase)
-- **entitlementId** - The entitlement/access level this purchase grants
-- **externalUserId** - External user identifier if configured
-- **isAnonymous** - Boolean indicating if the purchase is anonymous
-- **isActive** - Boolean indicating if the purchase currently grants access
-- **willRenew** - Boolean indicating if a subscription will auto-renew
-- **purchaseDate** - ISO timestamp of the most recent transaction
-- **originalPurchaseDate** - ISO timestamp of the initial purchase
-- **expirationDate** - ISO timestamp when access expires (`null` for lifetime purchases)
-- **store** - Either `"app_store"` or `"play_store"`
-- **country** - User's country code
-- **environment** - `"production"` or `"sandbox"`
-- **receipt** - The raw receipt data for server-side validation
-
-**Example Response (iOS):**
-
-```javascript
-[
-    {
-        "transactionId": "1000000987654321",
-        "originalTransactionId": "1000000123456789",
-        "productId": "com.app.premium.monthly",
-        "type": "subscription",
-        "entitlementId": "premium",
-        "externalUserId": "abc123",
-        "isAnonymous": false,
-        "isActive": true,
-        "willRenew": true,
-        "purchaseDate": "2024-01-15T14:32:05Z",
-        "originalPurchaseDate": "2023-06-20T09:15:33Z",
-        "expirationDate": "2024-02-15T14:32:05Z",
-        "store": "app_store",
-        "country": "USA",
-        "receipt": "MIIbngYJKoZIhvcNAQcCoIIbajCCG2YCAQExDzAN...",
-        "environment": "production"
-    },
-    {
-        "transactionId": "1000000555555555",
-        "originalTransactionId": "1000000555555555",
-        "productId": "com.app.removeads",
-        "type": "product",
-        "entitlementId": "no_ads",
-        "externalUserId": "abc123",
-        "isAnonymous": false,
-        "isActive": true,
-        "willRenew": false,
-        "purchaseDate": "2023-12-01T08:00:00Z",
-        "originalPurchaseDate": "2023-12-01T08:00:00Z",
-        "expirationDate": null,
-        "store": "app_store",
-        "country": "USA",
-        "receipt": "MIIbngYJKoZIhvcNAQcCoIIbajCCG2YCAQExDzAN...",
-        "environment": "production"
-    }
-]
-```
-
-**Example Response (Android):**
-
-```javascript
-[
-    {
-        "transactionId": "GPA.3372-4150-9088-12345",
-        "originalTransactionId": "GPA.3372-4150-9088-12345",
-        "productId": "com.app.premium.monthly",
-        "type": "subscription",
-        "entitlementId": "premium",
-        "externalUserId": "abc123",
-        "isAnonymous": false,
-        "isActive": true,
-        "willRenew": true,
-        "purchaseDate": "2024-01-15T14:32:05Z",
-        "originalPurchaseDate": "2023-06-20T09:15:33Z",
-        "expirationDate": "2024-02-15T14:32:05Z",
-        "store": "play_store",
-        "country": "US",
-        "receipt": "kefhajglhaljhfajkfajk.AO-J1OxBnT3hAjkl5FjpKc9...",
-        "environment": "production"
-    },
-    {
-        "transactionId": "GPA.3372-4150-9088-67890",
-        "originalTransactionId": "GPA.3372-4150-9088-67890",
-        "productId": "com.app.removeads",
-        "type": "product",
-        "entitlementId": "no_ads",
-        "externalUserId": "abc123",
-        "isAnonymous": false,
-        "isActive": true,
-        "willRenew": false,
-        "purchaseDate": "2023-12-01T08:00:00Z",
-        "originalPurchaseDate": "2023-12-01T08:00:00Z",
-        "expirationDate": null,
-        "store": "play_store",
-        "country": "US",
-        "receipt": "minodkpfokbofclncmaa.AO-J1Oy2fXpTml7rKxE3vNc9...",
-        "environment": "production"
-    }
-]
-```
-
-**Check Active Entitlements:**
-
-```javascript
-const data = await despia("getpurchasehistory://", ["restoredData"]);
-const purchases = data.restoredData;
-
-// Filter for active purchases only
-const activePurchases = purchases.filter(p => p.isActive);
-
-// Check if user has premium access
-const hasPremium = activePurchases.some(p => p.entitlementId === "premium");
-
-if (hasPremium) {
-    // Grant premium features
-}
-```
-
-**Perfect for:**
-
-- Implementing "Restore Purchases" buttons required by App Store guidelines
-- Verifying user entitlements on app launch
-- Checking subscription status and renewal information
-- Server-side receipt validation using raw receipt data
-- Cross-platform purchase history retrieval
-
-**Important Notes:**
-
-- This feature requires native capabilities which are fully provided by the `despia-native` npm package
-- No additional native libraries are needed
-- Please follow the installation instructions for the `despia-native` npm package closely
-- Implementation as mentioned is critical for App Store compliance
-
-### Read Clipboard Workflow
-
-Read clipboard data from the device:
-
-```javascript
-// First, install the package:
-// npm install despia-native
-
-// Then import it:
-import despia from 'despia-native';
-
-// Read clipboard data
-const clipboardData = await despia('getclipboard://', ['clipboarddata']);
-
-// Access the clipboard content
-const content = clipboardData.clipboarddata;
-
-// Display or process the clipboard content in your application
-console.log('Clipboard content:', content);
-```
-
-**How it works:**
-
-- **Read clipboard**: Use `getclipboard://` with `['clipboarddata']` to retrieve the current clipboard content
-- **Access content**: The clipboard content is available through the `.clipboarddata` property of the returned object
-- **Native support**: Works on both iOS and Android platforms
-
-**Perfect for:**
-
-- Reading text from the clipboard
-- Processing clipboard content in your app
-- Implementing paste functionality
-- Clipboard content validation
-
-### Open App Settings Workflow
-
-Open your app's native settings page where users can manage permissions:
-
-```javascript
-// First, install the package:
-// npm install despia-native
-
-// Then import it:
-import despia from 'despia-native';
-
-// Open native app settings
-despia("settingsapp://");
-```
-
-**How it works:**
-
-- **Opens native settings**: Navigates to your app's settings page in the device's system settings
-- **Permission management**: Users can manage permissions like notifications, location, camera, microphone, and more
-- **One-time prompts**: Great for directing users to activate features that you can only ask once, like location or push notifications
-
-**Perfect for:**
-
-- Directing users to enable location services after they've denied the initial prompt
-- Helping users enable push notifications if they initially declined
-- Managing camera, microphone, or other permission settings
-- Providing a way to access app settings when permission prompts can't be shown again
-
-**Example Usage:**
-
-```javascript
-// Check if location permission is needed
-if (!navigator.geolocation) {
-  // Open settings so user can enable location
-  despia("settingsapp://");
-}
-
-// After user denies push notification permission
-// Provide a button to open settings
-function openNotificationSettings() {
-  despia("settingsapp://");
-}
-```
-
-### OneSignal Push Notifications Workflow
-
-Set up OneSignal push notifications with external user IDs to connect your database user IDs with device registrations:
-
-```javascript
-// First, install the package:
-// npm install despia-native
-
-// Then import it:
-import despia from 'despia-native';
-
-// On every app load, set the external user ID
-// This connects your logged-in user ID with the device's OneSignal registration
-despia(`setonesignalplayerid://?user_id=${YOUR_LOGGED_IN_USER_ID}`);
-```
-
-**Setup Requirements:**
-
-1. **Create a OneSignal account** and configure your app
-2. **Set up iOS (Apple Push Key) and Android (Firebase)** configurations in OneSignal
-3. **Important**: When configuring OneSignal, select **"Native iOS"** and **"Native Android"** platforms since Despia apps are native mobile applications
-4. **Add your OneSignal App ID** to your Despia project settings
-
-**How it works:**
-
-- **External User IDs**: External IDs (your database user IDs) are now the default and recommended approach
-- **Player IDs**: Player IDs still work but are no longer suggested
-- **Device Registration**: Devices are automatically registered in OneSignal when the app is installed
-- **User Connection**: Calling `setonesignalplayerid://` on every app load connects your user ID with the device registration
-
-**Backend Integration Required:**
-
-You'll need to create a backend endpoint to send notifications using OneSignal's REST API with external user IDs:
-
-```javascript
-// Backend API endpoint - send to specific user
-const sendNotification = async (externalUserId, title, message) => {
-  const response = await fetch('https://onesignal.com/api/v1/notifications', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Basic YOUR_REST_API_KEY'
-    },
-    body: JSON.stringify({
-      app_id: 'ONESIGNAL-APP-ID',
-      include_external_user_ids: [externalUserId], // Array with single ID
-      headings: { en: title },
-      contents: { en: message }
-    })
-  });
-  return response.json();
-};
-```
-
-**Example Usage:**
-
-```javascript
-// In your app initialization or login flow
-function initializeApp(userId) {
-  // Set external user ID on every app load
-  despia(`setonesignalplayerid://?user_id=${userId}`);
-  
-  // Register for push notifications
-  despia('registerpush://');
-}
-
-// Send local push notification
-despia('sendlocalpushmsg://push.send?s=60&msg=Hello&!#New Message&!#https://myapp.com');
-```
-
-**Important Notes:**
-
-- This feature requires native capabilities which are fully provided by the `despia-native` npm package
-- No additional native libraries are needed
-- Please follow the installation instructions for the `despia-native` npm package closely
-- Implementation as mentioned is critical for proper push notification delivery
-- Call `setonesignalplayerid://` on every app load to ensure the user ID is always connected
-
-**Perfect for:**
-
-- Sending targeted notifications to specific users
-- User-based notification management
-- Cross-device notification delivery
-- Personalized push notification campaigns
-
-### Haptic Feedback
-
-All haptic feedback commands have no response - they provide immediate tactile feedback:
-
-```javascript
-// Basic haptic feedback
-despia('lighthaptic://');    // Light haptic feedback - subtle vibration
-despia('heavyhaptic://');    // Heavy haptic feedback - strong vibration
-
-// Contextual haptic feedback
-despia('successhaptic://');  // Success haptic feedback - positive confirmation
-despia('warninghaptic://');  // Warning haptic feedback - attention alert
-despia('errorhaptic://');    // Error haptic feedback - negative feedback
-
-// Use cases:
-// - Button press feedback (light/heavy)
-// - Success notifications (successhaptic)
-// - Warning alerts (warninghaptic)
-// - Error feedback (errorhaptic)
-// - UI interaction confirmation
-```
-
-### Biometric Authentication
-
-Biometric authentication requires setting up callback functions before running the command:
-
-```javascript
-// Step 1: Set up the biometric authentication SDK
-if (!document.getElementById("bioauth-sdk")) {
-    const script = document.createElement("script")
-    script.id = "bioauth-sdk"
-    script.type = "text/javascript"
-    script.textContent = `
-        function onBioAuthSuccess() {
-            window.bioauthSuccess()
-        }
-        function onBioAuthFailure(errorCode, errorMessage) {
-            window.bioauthFailure(errorCode, errorMessage)
-        }
-        function onBioAuthUnavailable() {
-            window.bioauthUnavailable()
-        }
-    `
-    document.head.appendChild(script)
-}
-
-// Step 2: Define your callback functions
-window.bioauthSuccess = function() {
-    if (navigator.userAgent.includes("despia")) {
-        console.log("Biometric authentication successful");
-        // Handle successful authentication
-        // Redirect user, unlock features, etc.
-    }
-}
-
-window.bioauthFailure = function(errorCode, errorMessage) {
-    if (navigator.userAgent.includes("despia")) {
-        console.log("Biometric authentication failed:", errorCode, errorMessage);
-        // Handle authentication failure
-        // Show error message, fallback to password, etc.
-    }
-}
-
-window.bioauthUnavailable = function() {
-    if (navigator.userAgent.includes("despia")) {
-        console.log("Biometric authentication unavailable");
-        // Handle when biometric auth is not available
-        // Fallback to alternative authentication method
-    }
-}
-
-// Step 3: Trigger biometric authentication
-despia('bioauth://');
-```
-
-### App Information & Device Data
-
-```javascript
-// Get app version information
-const appInfo = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
-console.log('App Version:', appInfo.versionNumber);
-console.log('Bundle Number:', appInfo.bundleNumber);
-
-// Get device UUID (native device ID)
-const deviceData = await despia('get-uuid://', ['uuid']);
-console.log('Device UUID:', deviceData.uuid);
-
-// Get store location
-const storeData = await despia('getstorelocation://', ['storeLocation']);
-console.log('Store Location:', storeData.storeLocation);
-
-// Check tracking permission
-const trackingData = await despia('user-disable-tracking://', ['trackingDisabled']);
-console.log('Tracking Disabled:', trackingData.trackingDisabled);
-```
-
-### UI Controls & Styling
-
-```javascript
-// Loading spinner controls
-await despia('spinneron://');   // Show loading spinner
-await despia('spinneroff://');  // Hide loading spinner
-
-// Full screen mode
-await despia('hidebars://on');  // Hide status bar (full screen)
-await despia('hidebars://off'); // Show status bar
-
-// Status bar styling
-await despia('statusbarcolor://{255, 255, 255}');     // Set status bar background color (RGB)
-await despia('statusbartextcolor://{black}');         // Set status bar text color (black/white)
-```
-
-### File & Media Operations
-
-```javascript
-// Take screenshot (saves to device)
-await despia('takescreenshot://');
-
-// Save image from URL
-await despia('savethisimage://?url=https://example.com/image.jpg');
-
-// Download file from URL
-await despia('file://https://example.com/document.pdf');
-
-// Share app with message and URL
-await despia('shareapp://message?=Check%20out%20this%20app&url=https://myapp.com');
-```
-
-### Scanning Mode
-
-```javascript
-// Control scanning mode
-await despia('scanningmode://auto');  // Auto scanning mode
-await despia('scanningmode://on');    // Enable scanning
-await despia('scanningmode://off');   // Disable scanning
-```
-
-### App Reset
-
-```javascript
-// Reset app (use with caution)
-await despia('reset://');
-```
-
-### Native Safe Area
-
-Access native safe area insets via CSS custom properties:
-
-```css
-/* Use native safe area insets in your CSS */
-.my-element {
-  padding-top: var(--safe-area-top);
-  padding-bottom: var(--safe-area-bottom);
-}
-
-/* Full height with safe area consideration */
-.full-height {
-  height: calc(100vh - var(--safe-area-top) - var(--safe-area-bottom));
-}
-```
-
-**Note:** Despia only supports top and bottom safe area insets. Left and right safe area variables are not available.
-
-These CSS variables are automatically provided by the Despia native runtime and represent the device's safe area insets (notches, home indicators, etc.).
-
-
+---
 
 ## API Reference
 
 ### `despia(command, watch?)`
 
-- **command** (string): The Despia protocol command (e.g., `'lighthaptic://'`)
-- **watch** (string[], optional): Array of variable names to watch for in the response
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `command` | `string` | A Despia protocol URL, e.g. `'lighthaptic://'` |
+| `watch` | `string[]` | Optional. Array of variable names to wait for in the response. |
 
-Returns a Promise that resolves when all watched variables are available:
-- **Single variable**: 30-second timeout with observation. `null` values resolve immediately (useful for error/not-found signals). Other empty placeholders (`undefined`, `"n/a"`, `{}`, `[]`) are ignored. Promise always resolves; on timeout it resolves with `undefined`.
-- **Multiple variables**: Uses VariableTracker with 5-minute auto-cleanup. All variables must have non-null values. Any `null` value blocks resolution until all variables have real values.
+Returns a `Promise` that resolves when all watched variables are set by the native runtime.
 
-### Timeout behavior
+**Timeout behavior**
 
-When you call `despia(command, ['someVariable'])`, the SDK waits up to 30 seconds for
-`window.someVariable` to be set by the native runtime. If it appears earlier, the
-Promise resolves with that value. If it is never set, the Promise still resolves
-after 30 seconds with `undefined` and a timeout is logged to the console. This
-prevents hanging Promises for long-running or failing native operations.
+The SDK waits up to 30 seconds for a single watched variable. If the native runtime never sets it, the Promise resolves with `undefined` and logs a timeout to the console.
 
-### Fresh-data behavior
+**Fresh-data behavior**
 
-Before observing, watched variables are cleared to avoid resolving on stale values.
-The observer behavior differs by variable count:
+Watched variables are cleared before each call to prevent resolving on stale values.
 
-- **Single variable**: `null` is treated as a valid resolution value (useful for error/not-found signals). The observer ignores other empty placeholders (`undefined`, `"n/a"`, `{}`, `[]`) and requires the value to change from its baseline before resolving.
+- Single variable: `null` is treated as a valid resolved value. Other empty placeholders (`undefined`, `"n/a"`, `{}`, `[]`) are ignored.
+- Multiple variables: all variables must be non-null before the Promise resolves.
 
-- **Multiple variables**: All variables must have non-null values. The observer ignores empty placeholders (`undefined`, `null`, `"n/a"`, `{}`, `[]`) and requires all values to change from their baseline before resolving.
+**Direct property access**
 
-This ensures each call waits for a fresh write from the native side.
-
-### Direct Property Access
-
-Access any window variable directly through the despia object:
-
-```javascript
+```js
 despia.variableName // Equivalent to window.variableName
 ```
 
-## Despia Protocol Format
-
-Despia uses a simple protocol format for all native integrations:
+### Protocol format
 
 ```
-feature://action?parameters
+feature://action?param1=value1&param2=value2
 ```
 
-Examples:
-- `lighthaptic://`
-- `getappversion://`
-- `revenuecat://purchase?external_id=user_777&product=monthly_premium`
-- `revenuecat://launchPaywall?external_id=user_777&offering=default`
-- `getpurchasehistory://`
-- `getclipboard://`
-- `settingsapp://`
-- `setonesignalplayerid://?user_id=user123`
-- `registerpush://`
-- `setvault://?key=userId&value=user123&locked=false`
-- `readvault://?key=userId`
-- `writevalue://{JSON-ENCODED-STRING}`
-- `readvalue://`
-- `oauth://?url=https://provider.com/oauth/authorize`
-- `requestcontactpermission://`
-- `savethisimage://?url=https://example.com/image.jpg`
+---
 
-## Available Despia Features
+## Features
 
-Your app can access these native features:
+### Haptic Feedback
 
-- **Native Widgets** - Create widgets with SVG and refresh time
-- **In-App Purchases** - RevenueCat integration with external user IDs
-- **Restore Purchases** - Retrieve purchase history from App Store and Google Play
-- **Contact Access** - Request permissions and read contacts
-- **Background Location** - Native tracking with browser geolocation API
-- **Push Notifications** - OneSignal integration with external user IDs and local push messages
-- **Haptic Feedback** - Light, heavy, success, warning, and error feedback
-- **App Information** - Version numbers, bundle numbers, device UUID
-- **Clipboard Access** - Read clipboard content from device
-- **Screenshots** - Take device screenshots
-- **Scanning Mode** - Auto, on, and off scanning controls
-- **Store Location** - Get store location data
-- **File Operations** - Save images and download files
-- **Identity Vault** - Persistent cross-device storage with optional biometric protection
-- **Local Storage** - Cross-platform device storage (cleared on uninstall)
-- **OAuth Authentication** - Secure OAuth flows with native browser sessions
-- **App Control** - Reset app and disable tracking
-- **App Settings** - Open native app settings for permission management
-- **UI Controls** - Loading spinners and full screen mode
-- **Sharing** - Share app with custom messages and URLs
-- **Status Bar** - Control colors and text colors
-- **Biometric Authentication** - Native biometric auth with callbacks
+```js
+despia('lighthaptic://');   // Subtle vibration
+despia('heavyhaptic://');   // Strong vibration
+despia('successhaptic://'); // Positive confirmation
+despia('warninghaptic://'); // Attention alert
+despia('errorhaptic://');   // Negative feedback
+```
 
-## TypeScript Support
+---
 
-Full TypeScript definitions are included:
+### Identity Vault
 
-```typescript
-import despia from 'despia-native';
+Encrypted key-value storage backed by iCloud KV on iOS and Android App Backup on Android. Persists across uninstalls and reinstalls. Data syncs automatically across all devices sharing the same Apple ID or Google account.
 
-// Type-safe usage with Despia commands
-const result: { versionNumber: string; bundleNumber: string } = await despia(
-  'getappversion://', 
-  ['versionNumber', 'bundleNumber']
+Set `locked=true` on any key to require Face ID or Touch ID before the value can be read back. Because the vault stores the actual value server-side and only returns it after biometric success, you can store real JWT tokens, session cookies, and API keys behind biometrics. This is a hardware-enforced security guarantee, not a client-side check that can be bypassed.
+
+```js
+// Store a JWT token (reading it back requires Face ID / Touch ID)
+await despia('setvault://?key=sessionToken&value=abc123&locked=true');
+
+// Read triggers the biometric prompt; token is only returned on success
+const data  = await despia('readvault://?key=sessionToken', ['sessionToken']);
+const token = data.sessionToken;
+```
+
+If the key does not exist, `readvault://` throws. Wrap in try/catch to handle first-time users.
+
+| Parameter | Description |
+|-----------|-------------|
+| `key` | Storage key, e.g. `"userId"` or `"sessionToken"` |
+| `value` | String value to store |
+| `locked` | `"true"` requires biometrics on read. `"false"` for open access. |
+
+**Store a value without biometric protection**
+
+```js
+await despia('setvault://?key=userId&value=user123&locked=false');
+
+const { userId } = await despia('readvault://?key=userId', ['userId']);
+```
+
+**Protect a sensitive action with Face ID**
+
+```js
+async function confirmWithBiometrics() {
+  await despia('setvault://?key=confirm&value=yes&locked=true');
+  try {
+    const data = await despia('readvault://?key=confirm', ['confirm']);
+    if (data.confirm === 'yes') {
+      await performSensitiveAction();
+      await despia('setvault://?key=confirm&value=&locked=false');
+    }
+  } catch {
+    // User cancelled or biometric failed
+  }
+}
+```
+
+**Prevent free trial abuse**
+
+```js
+async function checkTrialEligibility() {
+  try {
+    const data = await despia('readvault://?key=hasUsedTrial', ['hasUsedTrial']);
+    return data.hasUsedTrial !== 'yes';
+  } catch {
+    // Key not found, first-time user
+    await despia('setvault://?key=hasUsedTrial&value=yes&locked=false');
+    return true;
+  }
+}
+```
+
+---
+
+### GPS Location
+
+```js
+// Set up the live update callback
+window.onLocationChange = (data) => {
+  if (!data.active) return;
+  console.log(data.latitude, data.longitude, data.horizontalAccuracy);
+};
+
+// Start tracking (buffer in seconds, movement threshold in centimetres)
+despia('location://?buffer=60&movement=100');
+
+// Stop tracking and retrieve the session
+const { locationSession } = await despia('stoplocation://', ['locationSession']);
+```
+
+**Server delivery**
+
+When `server` is set, each GPS point is POSTed to your endpoint as it is recorded. Server delivery, `window.onLocationChange`, and local session storage all run simultaneously and independently. Loss of network does not affect local storage or frontend callbacks.
+
+```js
+despia('location://?server=https://api.example.com/track?user=USER_ID&buffer=30&movement=100');
+```
+
+Each POST body matches the location object shape returned by `stoplocation://`.
+
+Full docs: https://setup.despia.com/native-features/gps-location
+
+---
+
+### RevenueCat In-App Purchases
+
+**Launch a paywall**
+
+```js
+despia(`revenuecat://launchPaywall?external_id=${userId}&offering=default`);
+```
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `external_id` | Yes | Your user ID in RevenueCat |
+| `offering` | Yes | RevenueCat offering ID. Use `"default"` for your default offering. |
+
+**Direct purchase without paywall UI**
+
+```js
+// iOS
+despia(`revenuecat://purchase?external_id=${userId}&product=monthly_premium_ios`);
+
+// Android
+despia(`revenuecat://purchase?external_id=${userId}&product=premium:monthly_premium_android`);
+```
+
+**Handle purchase success**
+
+The native runtime calls `window.onRevenueCatPurchase()` after a successful purchase:
+
+```js
+window.onRevenueCatPurchase = async () => {
+  const { restoredData } = await despia('getpurchasehistory://', ['restoredData']);
+  const active = (restoredData ?? []).filter(p => p.isActive);
+
+  if (active.some(p => p.entitlementId === 'premium')) unlockPremium();
+  if (active.some(p => p.entitlementId === 'no_ads'))  removeAds();
+};
+```
+
+**Restore purchases**
+
+```js
+const { restoredData } = await despia('getpurchasehistory://', ['restoredData']);
+const hasPremium = restoredData
+  .filter(p => p.isActive)
+  .some(p => p.entitlementId === 'premium');
+```
+
+Each purchase object includes `transactionId`, `productId`, `type`, `entitlementId`, `isActive`, `willRenew`, `purchaseDate`, `expirationDate`, `store`, `receipt`, and more. The response shape is normalized across iOS and Android.
+
+---
+
+### Push Notifications
+
+```js
+// Register the device
+despia('registerpush://');
+
+// Connect your user ID to this device registration (call on every app load)
+despia(`setonesignalplayerid://?user_id=${userId}`);
+
+// Send a local scheduled notification (fires after 60 seconds)
+despia('sendlocalpushmsg://push.send?s=60&msg=Hello&!#New Message&!#https://myapp.com');
+```
+
+**Send to a specific user from your backend**
+
+```js
+await fetch('https://onesignal.com/api/v1/notifications', {
+  method: 'POST',
+  headers: {
+    'Content-Type':  'application/json',
+    'Authorization': 'Basic YOUR_REST_API_KEY',
+  },
+  body: JSON.stringify({
+    app_id: 'ONESIGNAL-APP-ID',
+    include_external_user_ids: [externalUserId],
+    headings: { en: title },
+    contents: { en: message },
+  }),
+});
+```
+
+When configuring OneSignal, select **Native iOS** and **Native Android** as the platforms, since Despia apps are native mobile applications.
+
+---
+
+### OAuth Authentication
+
+The flow uses two Despia URL protocols. `oauth://` opens a secure browser session (ASWebAuthenticationSession on iOS, Chrome Custom Tabs on Android). The `{scheme}://oauth/` prefix on the return deeplink tells Despia to close that session and navigate your WebView to the path that follows.
+
+When running in Despia, use a native-specific redirect URI pointing to `/native-callback.html` rather than your regular web auth callback. This is a different redirect URI from your web flow — register both with your OAuth provider.
+
+```js
+const isDespia = navigator.userAgent.toLowerCase().includes('despia');
+
+const redirectUri = isDespia
+  ? 'https://yourapp.com/native-callback.html'
+  : 'https://yourapp.com/auth/callback';
+
+const oauthUrl = `https://provider.com/oauth/authorize?client_id=xxx&redirect_uri=${encodeURIComponent(redirectUri)}`;
+
+if (isDespia) {
+  // Step 1: open a secure native browser session
+  despia(`oauth://?url=${encodeURIComponent(oauthUrl)}`);
+} else {
+  // Regular web flow
+  window.location.href = oauthUrl;
+}
+```
+
+`/native-callback.html` runs inside the secure browser session. It receives the tokens or authorization code from the provider, handles the exchange if needed, then fires the deeplink to close the session and return to the app:
+
+```js
+// Step 2: from inside the callback page, fire the deeplink to return to your app
+window.location.href = `{yourscheme}://oauth/auth?access_token=${token}`;
+```
+
+Despia intercepts the deeplink, closes the browser session, and navigates your WebView to `/auth?access_token=xxx`.
+
+Deeplink format: `{yourscheme}://oauth/{path}?params`
+
+Your deeplink scheme is your app name in lowercase with no spaces (e.g. `myapp://`), or a custom Despialink set in the Despia editor.
+
+| Deeplink | Result |
+|----------|--------|
+| `{yourscheme}://oauth/auth?access_token=xxx` | Browser closes, WebView navigates to `/auth?access_token=xxx` |
+| `{yourscheme}://oauth/home` | Browser closes, WebView navigates to `/home` |
+| `{yourscheme}://auth?access_token=xxx` | Browser stays open, user is stuck |
+
+**Callback page**
+
+Use a plain HTML file at `public/native-callback.html` rather than a React or Vue route. React Router can strip the `#access_token` hash fragment during a route change, causing tokens to disappear before your callback logic runs. A plain HTML file bypasses the router entirely and reads the hash directly from the browser.
+
+```html
+<!-- public/native-callback.html -->
+<script>
+  var params      = new URLSearchParams(window.location.search);
+  var hash        = new URLSearchParams(window.location.hash.substring(1));
+  var code        = params.get('code');        // authorization code flow
+  var accessToken = hash.get('access_token');  // implicit flow
+
+  if (code) {
+    // exchange code via your backend, then fire deeplink with tokens
+  } else if (accessToken) {
+    window.location.href = '{yourscheme}://oauth/auth?access_token=' + encodeURIComponent(accessToken);
+  }
+</script>
+```
+
+**Already-mounted `/auth` page**
+
+When Despia navigates the WebView to `/auth`, if that route is already active your framework does not remount the component. Token-reading logic that only runs on mount will not fire again. Fix per framework:
+
+- React: include `searchParams` in your `useEffect` dependency array
+- Vue: use `watch: { '$route.query': { immediate: true, handler } }` instead of reading params in `mounted()`
+- Vanilla JS: call your handler on load and add `window.addEventListener('popstate', handler)`
+
+Full docs: https://setup.despia.com/native-features/o-auth-2-0
+
+---
+
+### Clipboard
+
+```js
+const { clipboarddata } = await despia('getclipboard://', ['clipboarddata']);
+```
+
+---
+
+### Contacts
+
+```js
+const { contacts } = await despia('readcontacts://', ['contacts']);
+```
+
+---
+
+### App Information and Device Data
+
+```js
+const { versionNumber, bundleNumber } = await despia('getappversion://', ['versionNumber', 'bundleNumber']);
+const { uuid }             = await despia('get-uuid://',              ['uuid']);
+const { storeLocation }    = await despia('getstorelocation://',      ['storeLocation']);
+const { trackingDisabled } = await despia('user-disable-tracking://', ['trackingDisabled']);
+```
+
+---
+
+### UI Controls and Styling
+
+```js
+despia('spinneron://');                     // Show loading spinner
+despia('spinneroff://');                    // Hide loading spinner
+despia('hidebars://on');                    // Hide status bar (full screen)
+despia('hidebars://off');                   // Restore status bar
+despia('statusbarcolor://{255, 255, 255}'); // Set status bar background (RGB)
+despia('statusbartextcolor://{black}');     // Set status bar text color: black | white
+despia('settingsapp://');                   // Open native app settings
+despia('reset://');                         // Reset the app
+```
+
+---
+
+### File and Media Operations
+
+```js
+despia('takescreenshot://');
+despia('savethisimage://?url=https://example.com/image.jpg');
+despia('file://https://example.com/document.pdf');
+despia('shareapp://message?=Check%20out%20this%20app&url=https://myapp.com');
+despia('scanningmode://auto'); // auto | on | off
+```
+
+---
+
+### Web Storage APIs
+
+Despia runs your app on a secure origin (`http://localhost` via Local Server, or your remote URL). This means all standard web storage APIs work without any restrictions or workarounds, unlike other hybrid frameworks that require hacks or fall back to `file://` origins:
+
+```js
+// localStorage works normally
+localStorage.setItem('userId', 'user123');
+const userId = localStorage.getItem('userId');
+
+// IndexedDB works normally
+const db = await indexedDB.open('myapp', 1);
+
+// Web Crypto works normally
+const key = await crypto.subtle.generateKey(
+  { name: 'AES-GCM', length: 256 },
+  true,
+  ['encrypt', 'decrypt']
+);
+```
+
+For data that needs to survive uninstall and reinstall, or be locked behind Face ID, use [Identity Vault](#identity-vault) instead.
+
+---
+
+### Local Server
+
+Most hybrid frameworks approximate offline support with service workers. Service workers are a browser-level cache that intercepts network requests, they are fragile, complex to configure, and cannot truly boot an app without any network activity. Despia takes a different approach entirely.
+
+The Local Server downloads your complete web build to the device and serves it from a native on-device HTTP server at `http://localhost`. There are no service workers involved. The app loads from device storage at native speed, works completely offline from the first launch after hydration, and every web API works because it is running on a real secure origin.
+
+```bash
+npm install --save-dev @despia/local
+```
+
+Add the plugin to your build tool to generate the update manifest automatically:
+
+```js
+// vite.config.js (also available for Webpack, Rollup, Nuxt, SvelteKit, Astro, Remix, esbuild)
+import { defineConfig } from 'vite';
+import { despiaLocalPlugin } from '@despia/local/vite';
+
+export default defineConfig({
+  plugins: [
+    despiaLocalPlugin({
+      outDir: 'dist',
+      entryHtml: 'index.html'
+    })
+  ]
+});
+```
+
+Or run via CLI after any build:
+
+```bash
+npx despia-local dist
+```
+
+This generates `despia/local.json` in your output directory. Despia reads this manifest on startup, compares the `deployed_at` timestamp with the cached value, and downloads a new build in the background only when something has actually changed. The running app is never interrupted. Updates apply on the next launch.
+
+```json
+{
+  "entry": "/index.html",
+  "deployed_at": "1737225600000",
+  "assets": [
+    "/index.html",
+    "/assets/app.abc123.css",
+    "/assets/app.def456.js"
+  ]
+}
+```
+
+What this means in practice: your app boots in milliseconds from local storage, works indefinitely without any connectivity, and receives UI updates silently in the background with no app store submission required for HTML, CSS, JavaScript, image, or font changes.
+
+Full docs: https://setup.despia.com/local-server/introduction
+
+
+---
+
+### Local CDN
+
+Cache individual remote files on-device for offline playback and background downloads. Downloads use native OS transfer APIs (NSURLSession on iOS, WorkManager on Android) and continue when the app is closed, with automatic retry on network failure. On iOS a Live Activity shows real-time download progress. On Android a native notification appears in the system tray. Both require no setup.
+
+```js
+// Set up the completion callback before triggering a download
+window.contentServerChange = (item) => {
+  console.log('Cached:', item.index, item.local_cdn);
+  // item.local_cdn is the localhost URL to use for playback
+};
+
+// Fire and forget. Do not await with a watch key; large files outlive the 30s bridge timeout.
+despia(
+  `localcdn://write?url=${remoteUrl}&filename=videos/clip.mp4&index=clip_1&push=true&pushmessage="Download complete"`
 );
 
-// Direct property access
-const deviceInfo: any = despia.deviceInfo;
+// Read cached items by ID
+const { cdnItems } = await despia(
+  `localcdn://read?index=${encodeURIComponent(JSON.stringify(['clip_1']))}`,
+  ['cdnItems']
+);
+
+// Or query everything in the cache
+const { cdnItems: all } = await despia('localcdn://query', ['cdnItems']);
 ```
 
-## Integration with Despia
+Use the `local_cdn` URL for playback:
 
-Despia operates through a streamlined protocol handler system, allowing you to invoke native features using the global `window.despia` object. This npm package is the JavaScript SDK that makes your web app communicate with Despia's native runtime. The SDK provides:
-
-- **Command Queuing** - Sequential execution of Despia commands via `window.despia` setter
-- **Variable Watching** - Async monitoring of response variables
-- **Hybrid Framework Compatible** - Works with Despia's hybrid app framework
-- **Direct Access** - Proxy-based access to window variables
-
-### How It Works
-Despia's protocol handler system eliminates the need for complex libraries or dependencies, making it compatible across various frameworks and platforms. The SDK uses the setter pattern to execute commands:
-
-```javascript
-// When you call:
-despia('lighthaptic://');
-
-// It internally executes:
-window.despia = 'lighthaptic://';
+```html
+<video src="http://localhost:7777/localcdn/videos/clip.mp4" controls></video>
 ```
 
-This streamlined approach triggers Despia's native runtime to handle the native command, providing seamless access to device capabilities directly from your web codebase.
+**HTTP upload API** (Local Server only)
+
+```js
+const host = window.location.host; // Do not hardcode the port; it rotates per session
+const fd = new FormData();
+fd.append('file', fileInput.files[0]);
+
+const res  = await fetch(`http://${host}/api/upload`, { method: 'POST', body: fd });
+const data = await res.json();
+// { success: true, fileName: "video.mp4", url: "http://localhost:7777/files/video.mp4" }
+```
+
+| Method | Storage Path | URL Pattern |
+|--------|-------------|-------------|
+| `localcdn://write` | `/localcdn/` | `localhost:{PORT}/localcdn/{filepath}` |
+| `/api/upload` | `/files/` | `localhost:{PORT}/files/{filename}` |
+
+Full docs: https://setup.despia.com/local-cdn/introduction
+
+---
+
+## Safe Area
+
+Despia exposes top and bottom safe area insets as CSS custom properties set by the native runtime.
+
+```css
+.header {
+  padding-top: var(--safe-area-top);
+}
+
+.footer {
+  padding-bottom: var(--safe-area-bottom);
+}
+
+.full-height {
+  height: calc(100vh - var(--safe-area-top) - var(--safe-area-bottom));
+}
+```
+
+Note: left and right safe area variables are not available.
+
+---
+
+## Web Apps vs React Native
+
+This SDK is for web apps running inside the Despia runtime: React, Vue, Angular, Svelte, Next.js, Vite, Nuxt, and vanilla JavaScript.
+
+It is not for React Native, Expo, or native mobile development.
+
+---
+
+## Open Source
+
+| Package | Description | License |
+|---------|-------------|---------|
+| [despia-native](https://www.npmjs.com/package/despia-native) | JavaScript SDK | MIT |
+| [@despia/local](https://www.npmjs.com/package/@despia/local) | Offline asset bundler | MIT |
+| [despia-version-guard](https://www.npmjs.com/package/despia-version-guard) | OTA version gating | MIT |
+
+Native capability implementations are written in Swift and Java and included in full on project export.
+
+---
 
 ## License
 
