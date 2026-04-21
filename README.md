@@ -229,6 +229,8 @@ despia('warninghaptic://'); // Attention alert
 despia('errorhaptic://');   // Negative feedback
 ```
 
+[Read Full Documentation](https://setup.despia.com/native-features/haptic-feedback)
+
 ---
 
 ### Identity Vault
@@ -296,6 +298,8 @@ async function checkTrialEligibility() {
 }
 ```
 
+[Read Full Documentation](https://setup.despia.com/native-features/storage-vault) + [Read Full Documentation](https://setup.despia.com/native-features/biometrics)
+
 ---
 
 ### GPS Location
@@ -324,7 +328,7 @@ despia('location://?server=https://api.example.com/track?user=USER_ID&buffer=30&
 
 Each POST body matches the location object shape returned by `stoplocation://`.
 
-Full docs: [https://setup.despia.com/native-features/gps-location](https://setup.despia.com/native-features/gps-location)
+[Read Full Documentation](https://setup.despia.com/native-features/gps-location)
 
 ---
 
@@ -394,7 +398,7 @@ if (isDespia) {
 }
 ```
 
-Full RevenueCat docs: [https://setup.despia.com/native-features/revenuecat/reference](https://setup.despia.com/native-features/revenuecat/reference)
+[Read Full Documentation](https://setup.despia.com/native-features/revenuecat/introduction) + [API reference](https://setup.despia.com/native-features/revenuecat/reference)
 
 ---
 
@@ -450,7 +454,7 @@ despia('appsflyer://log_event?event_name=onboarding_step&event_values=' + encode
 
 `event_values` must always be `JSON.stringify()`ed and `encodeURIComponent()`ed. Event names are case-sensitive, lowercase alphanumeric and underscores only, max 300 unique names per day.
 
-Full attribution docs: [https://setup.despia.com/analytics/appsflyer/introduction](https://setup.despia.com/analytics/appsflyer/introduction)
+[Read Full Documentation](https://setup.despia.com/analytics/appsflyer/introduction) + [Read Full Documentation](https://setup.despia.com/analytics/appsflyer/attribution)
 
 ---
 
@@ -492,7 +496,7 @@ await fetch('https://onesignal.com/api/v1/notifications', {
 });
 ```
 
-When configuring OneSignal, select **Native iOS** and **Native Android** as the platforms. For critical alerts that bypass Do Not Disturb, see the full push docs: [https://setup.despia.com](https://setup.despia.com)
+When configuring OneSignal, select **Native iOS** and **Native Android** as the platforms. See [Read Full Documentation](https://setup.despia.com/native-features/onesignal/introduction) + [API reference](https://setup.despia.com/native-features/onesignal/reference) for setup, critical alerts (including Time Sensitive / Do Not Disturb), schemes, backend delivery, and targeting.
 
 ---
 
@@ -569,7 +573,7 @@ When Despia navigates the WebView to `/auth`, if that route is already active yo
 - Vue: use `watch: { '$route.query': { immediate: true, handler } }` instead of reading params in `mounted()`
 - Vanilla JS: call your handler on load and add `window.addEventListener('popstate', handler)`
 
-Full docs: [https://setup.despia.com/native-features/o-auth-2-0](https://setup.despia.com/native-features/o-auth-2-0)
+[Read Full Documentation](https://setup.despia.com/native-features/oauth/introduction)
 
 ---
 
@@ -579,6 +583,8 @@ Full docs: [https://setup.despia.com/native-features/o-auth-2-0](https://setup.d
 const { clipboarddata } = await despia('getclipboard://', ['clipboarddata']);
 ```
 
+[Read Full Documentation](https://setup.despia.com/native-features/clipboard)
+
 ---
 
 ### Contacts
@@ -586,6 +592,8 @@ const { clipboarddata } = await despia('getclipboard://', ['clipboarddata']);
 ```js
 const { contacts } = await despia('readcontacts://', ['contacts']);
 ```
+
+[Read Full Documentation](https://setup.despia.com/native-features/contact-access)
 
 ---
 
@@ -597,6 +605,8 @@ const { uuid }             = await despia('get-uuid://',              ['uuid']);
 const { storeLocation }    = await despia('getstorelocation://',      ['storeLocation']);
 const { trackingDisabled } = await despia('user-disable-tracking://', ['trackingDisabled']);
 ```
+
+[Read Full Documentation](https://setup.despia.com/native-features/device-indexing) + [Read Full Documentation](https://setup.despia.com/native-features/store-location) + [Read Full Documentation](https://setup.despia.com/native-features/app-privacy)
 
 ---
 
@@ -612,6 +622,8 @@ despia('statusbartextcolor://{black}');     // Set status bar text color: black 
 despia('settingsapp://');                   // Open native app settings
 despia('reset://');                         // Reset the app
 ```
+
+[Read Full Documentation](https://setup.despia.com/native-features/safe-areas) + [Read Full Documentation](https://setup.despia.com/native-features/app-settings)
 
 ---
 
@@ -643,6 +655,8 @@ despia('shareapp://message?=Check%20out%20this%20app&url=https://myapp.com');
 despia('scanningmode://auto'); // auto | on | off
 ```
 
+[Read Full Documentation](https://setup.despia.com/native-features/file-sharing) + [Read Full Documentation](https://setup.despia.com/native-features/camera-roll)
+
 ---
 
 ### Apple Health (HealthKit)
@@ -662,7 +676,7 @@ despia('writehealthkit://HKQuantityTypeIdentifierBodyMass//74.5');
 despia('healthkit://observe?types=HKQuantityTypeIdentifierStepCount&frequency=hourly&server=https://api.example.com/webhook?user=USER_ID');
 ```
 
-Pass any valid `HKQuantityTypeIdentifier`, `HKCategoryTypeIdentifier`, `HKWorkoutTypeIdentifier`, or `HKCharacteristicTypeIdentifier` directly. Sleep, workouts, heart rate, body mass, and all other HealthKit types are supported. Full docs: [https://setup.despia.com](https://setup.despia.com)
+Pass any valid `HKQuantityTypeIdentifier`, `HKCategoryTypeIdentifier`, `HKWorkoutTypeIdentifier`, or `HKCharacteristicTypeIdentifier` directly. Sleep, workouts, heart rate, body mass, and all other HealthKit types are supported. [Read Full Documentation](https://setup.despia.com/health-data/apple-health).
 
 ---
 
@@ -687,7 +701,7 @@ Once enabled, serve ads using standard AdSense, Google Publisher Tag, or IMA for
 
 Because ads are real DOM elements, placements that are impossible with native overlay ads — banners between feed cards, mid-article units, rewarded content gates, pre-roll video — are straightforward CSS and JavaScript.
 
-Google WebView API for Ads references: [iOS](https://developers.google.com/admob/ios/browser/webview/api-for-ads) | [Android](https://developers.google.com/admob/android/browser/webview/api-for-ads) | Full Despia docs: [https://setup.despia.com](https://setup.despia.com)
+Google WebView API for Ads references: [iOS](https://developers.google.com/admob/ios/browser/webview/api-for-ads) | [Android](https://developers.google.com/admob/android/browser/webview/api-for-ads) | [Read Full Documentation](https://setup.despia.com/native-features/admob/inline-ads) + [Read Full Documentation](https://setup.despia.com/native-features/admob/rewarded-ads)
 
 ---
 
@@ -708,7 +722,7 @@ const result = await request.show();
 await result.complete('success');
 ```
 
-Apple Pay on iOS and Google Pay on Android both work via the standard Web Payment Request API. No Despia-specific calls required. Reference: [Google Pay in Android WebView](https://developers.google.com/pay/api/android/guides/recipes/using-android-webview)
+Apple Pay on iOS and Google Pay on Android both work via the standard Web Payment Request API. No Despia-specific calls required. [Read Full Documentation](https://setup.despia.com/native-features/external-links) + [Google Pay in Android WebView](https://developers.google.com/pay/api/android/guides/recipes/using-android-webview)
 
 ---
 
@@ -733,6 +747,8 @@ const key = await crypto.subtle.generateKey(
 ```
 
 For data that needs to survive uninstall and reinstall, or be locked behind Face ID, use [Identity Vault](#identity-vault) instead.
+
+[Read Full Documentation](https://setup.despia.com/local-server/introduction) + [Read Full Documentation](https://setup.despia.com/native-features/simple-storage)
 
 ---
 
@@ -785,7 +801,7 @@ The plugin generates `despia/local.json` in your output directory alongside your
 }
 ```
 
-Full docs: [https://setup.despia.com/local-server/introduction](https://setup.despia.com/local-server/introduction)
+[Read Full Documentation](https://setup.despia.com/local-server/introduction) + [API reference](https://setup.despia.com/local-server/reference)
 
 ---
 
@@ -849,7 +865,7 @@ const data = await res.json();
 | `/api/upload`      | `/files/`    | `localhost:{PORT}/files/{filename}`    |
 
 
-Full docs: [https://setup.despia.com/local-cdn/introduction](https://setup.despia.com/local-cdn/introduction)
+[Read Full Documentation](https://setup.despia.com/local-cdn/introduction) + [API reference](https://setup.despia.com/local-cdn/reference)
 
 ---
 
@@ -886,6 +902,8 @@ Despia exposes top and bottom safe area insets as CSS custom properties set by t
 ```
 
 Note: left and right safe area variables are not available.
+
+[Read Full Documentation](https://setup.despia.com/native-features/safe-areas)
 
 ---
 
@@ -955,7 +973,7 @@ It is not for React Native, Expo, or native mobile development.
 
 Despia provides fully automated iOS and Android store deployment from the web editor. No Mac required. One-click deployment spins up Mac Mini build infrastructure in the cloud, handles code signing, provisioning, and submits to both the App Store and Google Play — entirely from a browser.
 
-Full deployment docs: [https://setup.despia.com/deployment/apple-ios/automatic](https://setup.despia.com/deployment/apple-ios/automatic)
+[Read Full Documentation](https://setup.despia.com/deployment/apple-ios/automatic) + [Read Full Documentation](https://setup.despia.com/deployment/google-android/automatic)
 
 ---
 
