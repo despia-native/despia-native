@@ -2,8 +2,8 @@
 
 JavaScript SDK for [Despia](https://despia.com). Build with any web framework, access 50+ native device capabilities through a single JavaScript function, and publish to iOS and Android from a browser. No Swift, no Kotlin, no terminal.
 
-[npm](https://www.npmjs.com/package/despia-native)
-[license](LICENSE)
+[![npm](https://img.shields.io/npm/v/despia-native)](https://www.npmjs.com/package/despia-native)
+[![license](https://img.shields.io/npm/l/despia-native)](LICENSE)
 
 **[Documentation](https://setup.despia.com)** | **[AI Agent Index](https://setup.despia.com/llms.txt)** | **[iOS Deployment](https://setup.despia.com/deployment/apple-ios/automatic)** | **[Android Deployment](https://setup.despia.com/deployment/google-android/automatic)**
 
@@ -17,8 +17,8 @@ The runtime runs on WKWebView (iOS) and the Chromium-based WebView (Android) wit
 
 Add the Despia MCP to give your AI assistant full knowledge of the `despia-native` API.
 
-[Install in Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=Despia&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vc2V0dXAuZGVzcGlhLmNvbS9tY3AifQ==)
-[Install in VS Code](vscode:mcp/install?%7B%22name%22%3A%22Despia%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fsetup.despia.com%2Fmcp%22%7D)
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=Despia&config=eyJ0eXBlIjoiaHR0cCIsInVybCI6Imh0dHBzOi8vc2V0dXAuZGVzcGlhLmNvbS9tY3AifQ==)
+[![Install in VS Code](https://img.shields.io/badge/Install_in_VS_Code-007ACC?logo=visualstudiocode&logoColor=white)](vscode:mcp/install?%7B%22name%22%3A%22Despia%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fsetup.despia.com%2Fmcp%22%7D)
 
 ```
 https://setup.despia.com/mcp
