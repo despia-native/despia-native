@@ -1,6 +1,6 @@
 {
     "name": "despia-native",
-    "version": "1.0.22",
+    "version": "1.0.23",
     "description": "Web-native iOS and Android SDK. Biometrics, GPS, in-app purchases, push notifications, and 50+ native APIs - no Swift, no Kotlin.",
     "main": "index.js",
     "module": "index.js",
