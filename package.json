@@ -1,7 +1,7 @@
 {
     "name": "despia-native",
     "version": "1.0.21",
-    "description": "JavaScript SDK for Despia native integrations with command queuing and variable watching",
+    "description": "Web-native iOS and Android SDK. Biometrics, GPS, in-app purchases, push notifications, and 50+ native APIs - no Swift, no Kotlin.",
     "main": "index.js",
     "module": "index.js",
     "types": "index.d.ts",
