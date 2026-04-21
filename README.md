@@ -3,7 +3,7 @@
 JavaScript SDK for [Despia](https://despia.com). Build with any web framework, access 50+ native device capabilities through a single JavaScript function, and publish to iOS and Android from a browser. No Swift, no Kotlin, no terminal.
 
 [![npm](https://img.shields.io/npm/v/despia-native)](https://www.npmjs.com/package/despia-native)
-[![license](https://img.shields.io/npm/l/despia-native)](LICENSE)
+[![license](https://img.shields.io/npm/l/despia-native)](https://github.com/despia-native/despia-native/blob/main/LICENSE)
 
 **[Documentation](https://setup.despia.com)** | **[AI Agent Index](https://setup.despia.com/llms.txt)** | **[iOS Deployment](https://setup.despia.com/deployment/apple-ios/automatic)** | **[Android Deployment](https://setup.despia.com/deployment/google-android/automatic)**
 
